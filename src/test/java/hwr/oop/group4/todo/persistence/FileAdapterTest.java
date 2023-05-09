@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class FileAdapterTest {
 
@@ -45,6 +45,19 @@ class FileAdapterTest {
     }
 
     @Test
-    void load() {
+    void load(@TempDir Path tempDir) throws IOException {
+        Persistable data = mock();
+
+        Path path = Path.of(tempDir.toString() + "/FileAdapterTest.load.txt");
+        File file = new File(path.toUri());
+        file.createNewFile();
+        FileWriter writer = new FileWriter(file);
+        writer.write("demo file content");
+        writer.close();
+
+        LoadPersistenceAdapter fileAdapter = new FileAdapter();
+        fileAdapter.load(data, file);
+
+        verify(data).importFromString("demo file content");
     }
 }

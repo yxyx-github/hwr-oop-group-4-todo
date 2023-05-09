@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface LoadPersistenceAdapter {
 
-    Persistable load(File file);
+    Persistable load(Persistable data, File file);
 }
