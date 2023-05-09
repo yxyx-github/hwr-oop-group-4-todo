@@ -1,5 +1,6 @@
 package hwr.oop.group4.todo.ui.controller;
 
+import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
 
@@ -9,15 +10,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class ConsoleHelper {
-
-    private final ConsoleController consoleController;
-
-    public ConsoleHelper(ConsoleController consoleController) {
-        this.consoleController = consoleController;
-    }
 
     public Optional<String> getStringParameter(Collection<CommandArgument<String>> args, String name) {
         return args.stream()
@@ -44,40 +40,42 @@ public class ConsoleHelper {
         return Optional.empty();
     }
 
-    public Optional<Integer> getId(Collection<CommandArgument<String>> args, int size) {
+    public Integer getId(Collection<CommandArgument<String>> args, int size) {
         Optional<CommandArgument<String>> idArg = args.stream()
                 .filter(arg -> arg.name().equals("id"))
                 .findFirst();
 
         if (idArg.isEmpty()) {
-            consoleController.outputLine("Error: ID Argument required.");
-            return Optional.empty();
+            throw new TodoRuntimeException("ID Argument not found.");
         }
 
         if (idArg.get().value().isBlank()) {
-            consoleController.outputLine("Error: ID Argument requires parameter.");
-            return Optional.empty();
+            throw new TodoRuntimeException("ID Argument has no parameter.");
         }
 
         int id;
         try {
             id = Integer.parseInt(idArg.get().value());
         } catch (NumberFormatException e) {
-            consoleController.outputLine("Error: ID is not a valid number.");
-            return Optional.empty();
+            throw new TodoRuntimeException("ID parameter is not a valid number.");
         }
 
         if (id < 0 || id >= size) {
-            consoleController.outputLine("Error: ID is invalid.");
-            return Optional.empty();
+            throw new TodoRuntimeException("ID parameter is invalid.");
         }
 
-        return Optional.of(id);
+        return id;
     }
 
     public String concatTagsToString(Collection<Tag> tags) {
-        StringBuilder stringBuilder = new StringBuilder();
-        tags.forEach(tag -> stringBuilder.append(tag.name()));
+        final StringBuilder stringBuilder = new StringBuilder();
+        final Iterator<Tag> iterator =  tags.iterator();
+        while (iterator.hasNext()) {
+            stringBuilder.append(iterator.next().name());
+            if (iterator.hasNext()) {
+                stringBuilder.append(", ");
+            }
+        }
         return stringBuilder.toString();
     }
 
