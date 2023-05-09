@@ -1,5 +1,7 @@
 package hwr.oop.group4.todo.persistence;
 
+import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +16,7 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
                 writer.write(data.exportAsString());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PersistenceRuntimeException("Cannot create or write file", e);
         }
     }
 
