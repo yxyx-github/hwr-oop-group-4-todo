@@ -25,12 +25,10 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
     @Override
     public Persistable load(Persistable data, File file) {
         StringBuilder output = new StringBuilder();
-        try {
-            Scanner scanner = new Scanner(file);
+        try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 output.append(scanner.nextLine());
             }
-            scanner.close();
         } catch (FileNotFoundException e) {
             throw new PersistenceRuntimeException("Cannot read file", e);
         }
