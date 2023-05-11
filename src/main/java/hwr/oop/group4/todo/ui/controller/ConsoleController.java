@@ -76,6 +76,34 @@ public class ConsoleController {
         }
     }
 
+    public int inputInt(List<String> prefixes) {
+        return inputInt(prefixes, null);
+    }
+
+    public int inputInt(List<String> prefixes, String prompt) {
+        return inputInt(prefixes, prompt, 0);
+    }
+
+    public int inputInt(List<String> prefixes, String prompt, int defaultValue) {
+        while (true) {
+            if (prompt != null && !prompt.isBlank()) {
+                outputLine(prompt);
+            }
+            output("Enter a whole number': ");
+            final String input = input(prefixes).orElse("");
+
+            if (input.isBlank()) {
+                return defaultValue;
+            }
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                //Retry input
+            }
+        }
+    }
+
     public LocalDateTime inputDate(List<String> prefixes) {
         return inputDate(prefixes, null);
     }

@@ -194,6 +194,45 @@ class ConsoleControllerTest {
         );
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {-10, -3, 0, 10})
+    void inputIntDefault(int defaultValue) {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int input = consoleController.inputInt(List.of(""), "", defaultValue);
+        assertThat(input).isEqualTo(defaultValue);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-10", "-3", "0", "10"})
+    void inputInt(String input) {
+        final InputStream inputStream = createInputStreamForInput(input);
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int integer = consoleController.inputInt(List.of(""));
+        assertThat(integer).isEqualTo(Integer.parseInt(input));
+    }
+
+    @Test
+    void inputIntPrompt() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        consoleController.inputInt(List.of(""), "Prompt");
+        assertThat(retrieveResultFrom(outputStream)).isEqualTo("Prompt" + System.lineSeparator() +
+                "Enter a whole number': :> ");
+    }
+
+    @Test
+    void inputUnsupportedValue() {
+        final InputStream inputStream = createInputStreamForInput("4000000000" + System.lineSeparator() + "40");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int input = consoleController.inputInt(List.of(""));
+        assertThat(input).isEqualTo(40);
+    }
+
     @Test
     void inputDateDefaultTest() {
         final InputStream inputStream = createInputStreamForInput("");
