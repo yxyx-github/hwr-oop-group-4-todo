@@ -49,7 +49,7 @@ public class TaskUi {
             consoleController.inputOptions(prefixes, List.of(
                     new Command("list",   this::list),
                     new Command("new",    this::create),
-                    new Command("edit",   this::editTask),
+                    new Command("edit",   this::edit),
                     new Command("remove", this::remove),
                     new Command("removeAllDone", this::removeAllDone),
                     new Command("complete", this::complete),
@@ -129,18 +129,49 @@ public class TaskUi {
     }
 
     private Optional<Task> getTaskFromId(Collection<CommandArgument<String>> args) {
-        final int id;
         try {
-            id = consoleHelper.getId(args, tasks.size());
+            return Optional.ofNullable(tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())));
         } catch (TodoRuntimeException e) {
             consoleController.outputLine(e.getMessage());
             return Optional.empty();
         }
-        return Optional.ofNullable(tasks.stream().toList().get(id));
     }
 
-    private void editTask(Collection<CommandArgument<String>> args) {
+    private void edit(Collection<CommandArgument<String>> args) {
+        final Optional<Task> task = getTaskFromId(args);
+        if (task.isEmpty()) {
+            return;
+        }
+        final Task.TaskBuilder builder = new Task.TaskBuilder();
 
+        final Optional<String> name =  consoleHelper.getStringParameter(args, "name");
+        final Optional<String> desc = consoleHelper.getStringParameter(args, "desc");
+        final Optional<String> deadline = consoleHelper.getStringParameter(args, "deadline");
+        final Optional<String> priority = consoleHelper.getStringParameter(args, "priority");
+        final Optional<String> addTags = consoleHelper.getStringParameter(args, "addTags");
+        final Optional<String> removeTags =consoleHelper.getStringParameter(args, "removeTag");
+
+        builder.name(name.orElse(task.get().getName()));
+        builder.description(desc.orElse(task.get().getDescription()));
+        builder.deadline(consoleHelper.parseDate(deadline.orElse("")).orElse(task.get().getDeadline()));
+
+        try {
+            builder.priority(Integer.parseInt(priority.orElse("")));
+        } catch (NumberFormatException e) {
+            builder.priority(task.get().getPriority());
+        }
+
+        addTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
+                .forEach(tag -> task.get().addTag(new Tag(tag)))
+        );
+
+        removeTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
+                .forEach(tag -> task.get().getTags().remove(new Tag(tag)))
+        );
+
+        builder.addTags(task.get().getTags().toArray(Tag[]::new));
+        tasks.remove(task.get());
+        tasks.add(builder.build());
     }
 
     private void open(Collection<CommandArgument<String>> args) {
