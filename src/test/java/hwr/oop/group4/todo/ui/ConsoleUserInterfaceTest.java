@@ -120,9 +120,9 @@ class ConsoleUserInterfaceTest {
                 "      Change the beginning of the project." + System.lineSeparator() +
                 "    -end" + System.lineSeparator() +
                 "      Change the end of the project" + System.lineSeparator() +
-                "    -addTag <tag>" + System.lineSeparator() +
+                "    -addTags <tag> [<tag> ...]" + System.lineSeparator() +
                 "      Add a new tag." + System.lineSeparator() +
-                "    -removeTag <tag>" + System.lineSeparator() +
+                "    -removeTags <tag> [<tag> ...]" + System.lineSeparator() +
                 "      Remove a tag." + System.lineSeparator() +
                 "  remove" + System.lineSeparator() +
                 "    Remove a project." + System.lineSeparator() +
@@ -137,7 +137,9 @@ class ConsoleUserInterfaceTest {
 
     @Test
     void canOpenIntrayMenu() {
-        InputStream inputStream = createInputStreamForInput(System.lineSeparator() + "intray" + System.lineSeparator() +
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "intray" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
                 "quit" + System.lineSeparator()
         );
         OutputStream outputStream = new ByteArrayOutputStream();
@@ -150,6 +152,27 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
         loadMenuOutput +
                 mainMenuOutput +
+                "| ID | Name                 | Description                                        |" + System.lineSeparator() +
+                "==================================================================================" + System.lineSeparator() +
+                "[1m<==== Intray Menu ====>[0m" + System.lineSeparator() +
+                "Manage your fleeting thoughts!" + System.lineSeparator() +
+                System.lineSeparator() +
+                "Commands: " + System.lineSeparator() +
+                "  list" + System.lineSeparator() +
+                "    List all ideas." + System.lineSeparator() +
+                "  new" + System.lineSeparator() +
+                "    Create a new idea." + System.lineSeparator() +
+                "  remove" + System.lineSeparator() +
+                "    Remove an idea" + System.lineSeparator() +
+                "    -id <id>" + System.lineSeparator() +
+                "      ID of the idea to be removed." + System.lineSeparator() +
+                "  task" + System.lineSeparator() +
+                "    Create a task from an idea" + System.lineSeparator() +
+                "    -id <id>" + System.lineSeparator() +
+                "      ID of the idea to be used." + System.lineSeparator() +
+                "  back" + System.lineSeparator() +
+                "    Return to the previous menu." + System.lineSeparator() +
+                "intray:> " +
                 mainMenuOutput
         );
     }
