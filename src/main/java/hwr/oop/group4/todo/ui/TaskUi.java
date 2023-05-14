@@ -12,6 +12,7 @@ import hwr.oop.group4.todo.ui.controller.menu.Menu;
 import hwr.oop.group4.todo.ui.controller.tables.ColumnConfig;
 import hwr.oop.group4.todo.ui.controller.tables.Table;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -122,10 +123,34 @@ public class TaskUi {
     }
 
     private void create(Collection<CommandArgument<String>> args) {
-
+        create(null, prefixes);
     }
 
-    private void create(Idea idea) {
+    private void create(Idea idea, List<String> prefixes) {
+        final List<String> mutablePrefixes = new ArrayList<>(prefixes);
+        mutablePrefixes.add("new");
+        final Task.TaskBuilder builder = new Task.TaskBuilder();
+        if (idea == null) {
+            mutablePrefixes.add("name");
+            final String name = consoleController.input(mutablePrefixes).orElseThrow();
+            mutablePrefixes.remove(mutablePrefixes.size()-1);
+            mutablePrefixes.add("description");
+            final String desc = consoleController.input(mutablePrefixes).orElseThrow();
+            mutablePrefixes.remove(mutablePrefixes.size()-1);
+            builder.name(name).description(desc);
+        } else {
+            builder.fromIdea(idea);
+        }
+        mutablePrefixes.add("priority");
+        final int priority = consoleController.inputInt(mutablePrefixes);
+        mutablePrefixes.remove(mutablePrefixes.size()-1);
+        mutablePrefixes.add("deadline");
+        final LocalDateTime deadline = consoleController.inputDate(mutablePrefixes);
+
+        tasks.add(builder.priority(priority)
+                .deadline(deadline)
+                .build()
+        );
     }
 
     private Optional<Task> getTaskFromId(Collection<CommandArgument<String>> args) {
@@ -149,7 +174,7 @@ public class TaskUi {
         final Optional<String> deadline = consoleHelper.getStringParameter(args, "deadline");
         final Optional<String> priority = consoleHelper.getStringParameter(args, "priority");
         final Optional<String> addTags = consoleHelper.getStringParameter(args, "addTags");
-        final Optional<String> removeTags =consoleHelper.getStringParameter(args, "removeTag");
+        final Optional<String> removeTags = consoleHelper.getStringParameter(args, "removeTags");
 
         builder.name(name.orElse(task.get().getName()));
         builder.description(desc.orElse(task.get().getDescription()));
@@ -161,16 +186,18 @@ public class TaskUi {
             builder.priority(task.get().getPriority());
         }
 
+        final Set<Tag> taskTags = task.get().getTags();
+        tasks.remove(task.get());
+
         addTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
-                .forEach(tag -> task.get().addTag(new Tag(tag)))
+                .forEach(tag -> taskTags.add(new Tag(tag)))
         );
 
         removeTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
-                .forEach(tag -> task.get().getTags().remove(new Tag(tag)))
+                .forEach(tag -> taskTags.remove(new Tag(tag)))
         );
 
-        builder.addTags(task.get().getTags().toArray(Tag[]::new));
-        tasks.remove(task.get());
+        builder.addTags(taskTags.toArray(Tag[]::new));
         tasks.add(builder.build());
     }
 
