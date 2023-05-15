@@ -126,7 +126,7 @@ public class TaskUi {
         create(null, prefixes);
     }
 
-    private void create(Idea idea, List<String> prefixes) {
+    public void create(Idea idea, List<String> prefixes) {
         final List<String> mutablePrefixes = new ArrayList<>(prefixes);
         mutablePrefixes.add("new");
         final Task.TaskBuilder builder = new Task.TaskBuilder();
