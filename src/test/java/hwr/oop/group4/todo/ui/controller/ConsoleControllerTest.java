@@ -221,7 +221,7 @@ class ConsoleControllerTest {
         final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
         consoleController.inputInt(List.of(""), "Prompt");
         assertThat(retrieveResultFrom(outputStream)).isEqualTo("Prompt" + System.lineSeparator() +
-                "Enter a whole number': :> ");
+                "Enter a whole number: :> ");
     }
 
     @Test
