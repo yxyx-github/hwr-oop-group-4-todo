@@ -136,19 +136,16 @@ class TaskUiTest {
 
     @Test
     void editName() {
-        final InputStream inputStream = createInputStreamForInput("edit -name newName" + System.lineSeparator() +
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -name newName" + System.lineSeparator() +
                 "back" + System.lineSeparator());
         final OutputStream outputStream = new ByteArrayOutputStream();
 
         final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
         final TodoList list = new TodoList();
         list.addLoseTask(new Task.TaskBuilder().name("test").build());
-        System.out.println(list.getLoseTasks());
         ui.menu(list);
 
-        assertThat(list.getProjects().get(0).getName()).isEqualTo("newName");
-
-
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().name("newName").build());
     }
 
 }
