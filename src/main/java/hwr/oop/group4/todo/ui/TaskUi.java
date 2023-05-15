@@ -123,10 +123,10 @@ public class TaskUi {
     }
 
     private void create(Collection<CommandArgument<String>> args) {
-        create(null, prefixes);
+        tasks.add(create(null, prefixes));
     }
 
-    public void create(Idea idea, List<String> prefixes) {
+    public Task create(Idea idea, List<String> prefixes) {
         final List<String> mutablePrefixes = new ArrayList<>(prefixes);
         mutablePrefixes.add("new");
         final Task.TaskBuilder builder = new Task.TaskBuilder();
@@ -147,10 +147,10 @@ public class TaskUi {
         mutablePrefixes.add("deadline");
         final LocalDateTime deadline = consoleController.inputDate(mutablePrefixes);
 
-        tasks.add(builder.priority(priority)
+
+        return builder.priority(priority)
                 .deadline(deadline)
-                .build()
-        );
+                .build();
     }
 
     private Optional<Task> getTaskFromId(Collection<CommandArgument<String>> args) {

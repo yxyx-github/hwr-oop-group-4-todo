@@ -1,9 +1,6 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.core.Project;
-import hwr.oop.group4.todo.core.Tag;
-import hwr.oop.group4.todo.core.Task;
-import hwr.oop.group4.todo.core.TodoList;
+import hwr.oop.group4.todo.core.*;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
@@ -135,6 +132,25 @@ class TaskUiTest {
                 "=========================================================================================================" + System.lineSeparator() +
                 "|  0 |            NAME |                    description |            | 10.12.21 |        1 |       OPEN |" + System.lineSeparator() +
                 "tasks:> ");
+    }
+
+    @Test
+    void createFromIdea() {
+        final InputStream inputStream = createInputStreamForInput("2" + System.lineSeparator() +
+                "10.12.2021" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final Idea idea = new Idea("taskName", "desc");
+        Task task = ui.create(idea, List.of(""));
+        assertThat(task).isEqualTo(new Task.TaskBuilder()
+                .name("taskName")
+                .description("desc")
+                .priority(2)
+                .deadline(LocalDateTime.of(2021, 12, 10, 0, 0))
+                .build()
+        );
     }
 
     @Test
