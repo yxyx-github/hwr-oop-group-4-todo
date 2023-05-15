@@ -5,7 +5,6 @@ import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.core.Task;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class TaskUiTest {
 
@@ -76,14 +74,19 @@ class TaskUiTest {
     }
 
     private Project getExampleProject() {
+        final Task closedTaskA = new Task.TaskBuilder().name("name").addTags(new Tag("123"), new Tag("abc")).build();
+        final Task closedTaskB = new Task.TaskBuilder().name("name").description("123").build();
+
+        closedTaskA.closed();
+        closedTaskB.closed();
+
         return new Project.ProjectBuilder()
                 .addTask(new Task.TaskBuilder().name("name").description("desd").build())
-                .addTask(new Task.TaskBuilder().name("name").description("123").build())
                 .addTask(new Task.TaskBuilder().deadline(
                                 LocalDateTime.of(2000, 10, 22, 0, 0))
                         .description("desd").priority(10).build())
                 .addTask(new Task.TaskBuilder().name("name").description("desd").build())
-                .addTask(new Task.TaskBuilder().name("name").addTags(new Tag("123"), new Tag("abc")).build())
+                .addTasks(closedTaskA, closedTaskB)
                 .build();
     }
 
@@ -97,12 +100,12 @@ class TaskUiTest {
         final String output = retrieveResultFrom(outputStream);
         assertThat(output).startsWith(menuOutput + System.lineSeparator() +
                 "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
-                "=========================================================================================================" + System.lineSeparator());
-        assertThat(output).contains("|            name |                            123 |            |          |        0 |       OPEN |" + System.lineSeparator());
-        assertThat(output).contains("|    unnamed task |                           desd |            | 22.10.00 |       10 |       OPEN |" + System.lineSeparator());
-        assertThat(output).contains("|            name |                                |   123, abc |          |        0 |       OPEN |" + System.lineSeparator());
-        assertThat(output).contains("|            name |                           desd |            |          |        0 |       OPEN |" + System.lineSeparator());
-        assertThat(output).endsWith("projects/1/task:> ");
+                "=========================================================================================================" + System.lineSeparator())
+                .contains("|            name |                            123 |            |          |        0 |     CLOSED |" + System.lineSeparator())
+                .contains("|    unnamed task |                           desd |            | 22.10.00 |       10 |       OPEN |" + System.lineSeparator())
+                .contains("|            name |                                |   123, abc |          |        0 |     CLOSED |" + System.lineSeparator())
+                .contains("|            name |                           desd |            |          |        0 |       OPEN |" + System.lineSeparator())
+                .endsWith("projects/1/task:> ");
     }
 
     @Test
@@ -146,6 +149,108 @@ class TaskUiTest {
         ui.menu(list);
 
         assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().name("newName").build());
+    }
+
+    @Test
+    void editPriority() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -priority 100" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().priority(12).build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().priority(100).build());
+    }
+
+    @Test
+    void editDesc() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -desc newDesc" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().description("desc").build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().description("newDesc").build());
+    }
+
+    @Test
+    void editDeadline() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -deadline 10.12.2022" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder()
+                .deadline(LocalDateTime.of(2020, 10, 10, 0, 0)).build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder()
+                .deadline(LocalDateTime.of(2022, 12, 10, 0, 0)).build());
+    }
+
+    @Test
+    void addTags() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -addTags abc xyz" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().addTag(new Tag("tag")).build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder()
+                        .addTags(new Tag("tag"), new Tag("abc"), new Tag("xyz")).build());
+    }
+
+    @Test
+    void removeTags() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -removeTags abc xyz" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder()
+                .addTags(new Tag("tag"), new Tag("abc"), new Tag("xyz")).build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().addTag(new Tag("tag")).build());
+    }
+
+    @Test
+    void removeTask() {
+        final InputStream inputStream = createInputStreamForInput("remove -id 0" + System.lineSeparator() +
+                "y" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().name("test").build());
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).isEmpty();
+    }
+
+    @Test
+    void removeAllDone() {
+        final InputStream inputStream = createInputStreamForInput("removeAllDone" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final Project project = getExampleProject();
+        ui.menu(project, List.of(""));
+
+        assertThat(project.getTasks()).hasSize(2);
     }
 
 }
