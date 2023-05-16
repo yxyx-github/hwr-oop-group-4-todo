@@ -125,7 +125,7 @@ class TaskUiTest {
                 "tasks:> " +
                 "tasks/new/name:> " +
                 "tasks/new/description:> " +
-                "Enter a whole number: tasks/new/priority:> " +
+                "Enter a whole number [default: 0]: tasks/new/priority:> " +
                 "Enter a date/time formatted as 'dd.mm.yyyy' or 'dd.mm.yyyy hh:mm': tasks/new/deadline:> " +
                 "tasks:> " +
                 "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
