@@ -154,6 +154,21 @@ class TaskUiTest {
     }
 
     @Test
+    void editWrongId() {
+        final InputStream inputStream = createInputStreamForInput("edit -id 0 -name name" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        ui.menu(new TodoList());
+        assertThat(retrieveResultFrom(outputStream)).isEqualTo(menuOutput + System.lineSeparator() +
+                "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
+                "=========================================================================================================" + System.lineSeparator() +
+                "tasks:> ID parameter is invalid." + System.lineSeparator() +
+                "tasks:> ");
+    }
+
+    @Test
     void editName() {
         final InputStream inputStream = createInputStreamForInput("edit -id 0 -name newName" + System.lineSeparator() +
                 "back" + System.lineSeparator());
@@ -316,5 +331,4 @@ class TaskUiTest {
         expected.closed();
         assertThat(list.getLoseTasks()).contains(expected);
     }
-
 }
