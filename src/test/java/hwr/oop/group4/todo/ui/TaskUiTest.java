@@ -269,4 +269,52 @@ class TaskUiTest {
         assertThat(project.getTasks()).hasSize(2);
     }
 
+    @Test
+    void open() {
+        final InputStream inputStream = createInputStreamForInput("open -id 0" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        final Task task = new Task.TaskBuilder().name("test").build();
+        task.closed();
+        list.addLoseTask(task);
+        ui.menu(list);
+
+        assertThat(list.getLoseTasks()).contains(new Task.TaskBuilder().name("test").build());
+    }
+
+    @Test
+    void inProgress() {
+        final InputStream inputStream = createInputStreamForInput("inProgress -id 0" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().name("test").build());
+        ui.menu(list);
+
+        final Task expected = new Task.TaskBuilder().name("test").build();
+        expected.inProgress();
+        assertThat(list.getLoseTasks()).contains(expected);
+    }
+
+    @Test
+    void close() {
+        final InputStream inputStream = createInputStreamForInput("complete -id 0" + System.lineSeparator() +
+                "back" + System.lineSeparator());
+        final OutputStream outputStream = new ByteArrayOutputStream();
+
+        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
+        final TodoList list = new TodoList();
+        list.addLoseTask(new Task.TaskBuilder().name("test").build());
+        ui.menu(list);
+
+        final Task expected = new Task.TaskBuilder().name("test").build();
+        expected.closed();
+        assertThat(list.getLoseTasks()).contains(expected);
+    }
+
 }
