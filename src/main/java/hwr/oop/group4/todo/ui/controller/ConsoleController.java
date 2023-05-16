@@ -89,7 +89,7 @@ public class ConsoleController {
             if (prompt != null && !prompt.isBlank()) {
                 outputLine(prompt);
             }
-            output("Enter a whole number: ");
+            output("Enter a whole number [default: " + defaultValue + "]: ");
             final String input = input(prefixes).orElse("");
 
             if (input.isBlank()) {
