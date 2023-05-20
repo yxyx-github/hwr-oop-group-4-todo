@@ -72,7 +72,7 @@ public class ProjectUi {
         }
     }
 
-    private void listProjects(Collection<CommandArgument<String>> args) {
+    private void listProjects(Collection<CommandArgument> args) {
         final List<Project> projects = todoList.getProjects();
         final int idColumnLength = Math.max((int) Math.ceil(Math.log10(projects.size()) - 2), 2);
         final Table projectTable = new Table(List.of(
@@ -99,7 +99,7 @@ public class ProjectUi {
         consoleController.output(projectTable.toString());
     }
 
-    private void newProject(Collection<CommandArgument<String>> args) {
+    private void newProject(Collection<CommandArgument> args) {
         String name = consoleController.input(List.of("projects", "new", "name")).orElseThrow();
         String desc = consoleController.input(List.of("projects", "new", "description")).orElseThrow();
         LocalDateTime begin = consoleController.inputDate(List.of("projects", "new", "begin"));
@@ -115,7 +115,7 @@ public class ProjectUi {
         todoList.addProject(project);
     }
 
-    private void removeProject(Collection<CommandArgument<String>> args) {
+    private void removeProject(Collection<CommandArgument> args) {
         final int id;
         try {
             id = consoleHelper.getId(args, todoList.getProjects().size());
@@ -131,7 +131,7 @@ public class ProjectUi {
         }
     }
 
-    private void editProject(Collection<CommandArgument<String>> args) {
+    private void editProject(Collection<CommandArgument> args) {
         final int id;
         try {
             id = consoleHelper.getId(args, todoList.getProjects().size());

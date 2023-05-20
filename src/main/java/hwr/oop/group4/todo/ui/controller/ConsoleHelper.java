@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class ConsoleHelper {
 
-    public Optional<String> getStringParameter(Collection<CommandArgument<String>> args, String name) {
+    public Optional<String> getStringParameter(Collection<CommandArgument> args, String name) {
         return args.stream()
                 .filter(argument -> argument.name().equals(name))
                 .map(CommandArgument::value)
@@ -42,8 +42,8 @@ public class ConsoleHelper {
         }
     }
 
-    public int getId(Collection<CommandArgument<String>> args, int size) {
-        Optional<CommandArgument<String>> idArg = args.stream()
+    public int getId(Collection<CommandArgument> args, int size) {
+        Optional<CommandArgument> idArg = args.stream()
                 .filter(arg -> arg.name().equals("id"))
                 .findFirst();
 
