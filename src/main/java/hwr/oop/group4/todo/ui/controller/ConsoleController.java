@@ -33,7 +33,7 @@ public class ConsoleController {
     public void inputOptions(List<String> prefixes, Collection<Command> options, Command wrongInput) {
         final String[] input = input(prefixes).orElseThrow(() -> new TodoUiRuntimeException("Input is expected"))
                 .split("-");
-        final Collection<CommandArgument<String>> arguments = new ArrayList<>();
+        final Collection<CommandArgument> arguments = new ArrayList<>();
         final String commandName = input[0].trim();
 
         Arrays.stream(input)
@@ -41,9 +41,9 @@ public class ConsoleController {
                 .forEachOrdered(arg -> {
                     final String[] argument = arg.split(" ", 2);
                     if (argument.length == 2) {
-                        arguments.add(new CommandArgument<>(argument[0].trim(), argument[1].trim()));
+                        arguments.add(new CommandArgument(argument[0].trim(), argument[1].trim()));
                     } else {
-                        arguments.add(new CommandArgument<>(argument[0].trim(), ""));
+                        arguments.add(new CommandArgument(argument[0].trim(), ""));
                     }
                 });
 

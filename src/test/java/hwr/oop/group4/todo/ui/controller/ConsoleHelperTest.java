@@ -18,7 +18,7 @@ class ConsoleHelperTest {
     @Test
     void getStringParameterTest() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("id", "eman"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("id", "eman"));
 
         final Optional<String> returnValue = consoleHelper.getStringParameter(arguments, "id");
 
@@ -28,7 +28,7 @@ class ConsoleHelperTest {
     @Test
     void getStringParameterWithInvalidNameTest() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("name", "eman"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("name", "eman"));
 
         final Optional<String> returnValue = consoleHelper.getStringParameter(arguments, "id");
 
@@ -73,7 +73,7 @@ class ConsoleHelperTest {
     @Test
     void canGetId() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("id", "12"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("id", "12"));
 
         final int returnValue = consoleHelper.getId(arguments, 15);
 
@@ -83,44 +83,40 @@ class ConsoleHelperTest {
     @Test
     void cantGetIdNoArg() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("d", "12"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("d", "12"));
 
-        assertThatThrownBy(() -> {
-            final int returnValue = consoleHelper.getId(arguments, 15);
-        }).isInstanceOf(TodoRuntimeException.class)
+        assertThatThrownBy(() -> consoleHelper.getId(arguments, 15))
+                .isInstanceOf(TodoRuntimeException.class)
                 .hasMessage("ID Argument not found.");
     }
 
     @Test
     void cantGetIdNoParameter() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("id", ""));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("id", ""));
 
-        assertThatThrownBy(() -> {
-            final int returnValue = consoleHelper.getId(arguments, 15);
-        }).isInstanceOf(TodoRuntimeException.class)
+        assertThatThrownBy(() -> consoleHelper.getId(arguments, 15))
+                .isInstanceOf(TodoRuntimeException.class)
                 .hasMessage("ID Argument has no parameter.");
     }
 
     @Test
     void cantGetIdNoNumber() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("id", "name"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("id", "name"));
 
-        assertThatThrownBy(() -> {
-            final int returnValue = consoleHelper.getId(arguments, 15);
-        }).isInstanceOf(TodoRuntimeException.class)
+        assertThatThrownBy(() -> consoleHelper.getId(arguments, 15))
+                .isInstanceOf(TodoRuntimeException.class)
                 .hasMessage("ID parameter is not a valid number.");
     }
 
     @Test
     void cantGetIdInvalidNumber() {
         final ConsoleHelper consoleHelper = new ConsoleHelper();
-        final Collection<CommandArgument<String>> arguments = List.of(new CommandArgument<>("id", "21"));
+        final Collection<CommandArgument> arguments = List.of(new CommandArgument("id", "21"));
 
-        assertThatThrownBy(() -> {
-            final int returnValue = consoleHelper.getId(arguments, 15);
-        }).isInstanceOf(TodoRuntimeException.class)
+        assertThatThrownBy(() -> consoleHelper.getId(arguments, 15))
+                .isInstanceOf(TodoRuntimeException.class)
                 .hasMessage("ID parameter is invalid.");
     }
 
