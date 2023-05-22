@@ -94,7 +94,7 @@ public class TaskUi {
     }
 
 
-    private void list(Collection<CommandArgument<String>> args) {
+    private void list(Collection<CommandArgument> args) {
         final int idColumnLength = Math.max((int) Math.ceil(Math.log10(tasks.size()) - 2), 2);
         final Table projectTable = new Table(List.of(
                 new ColumnConfig("ID", idColumnLength),
@@ -123,7 +123,7 @@ public class TaskUi {
         consoleController.output(projectTable.toString());
     }
 
-    private void create(Collection<CommandArgument<String>> args) {
+    private void create(Collection<CommandArgument> args) {
         tasks.add(create(null, prefixes));
     }
 
@@ -153,7 +153,7 @@ public class TaskUi {
                 .build();
     }
 
-    private Optional<Task> getTaskFromId(Collection<CommandArgument<String>> args) {
+    private Optional<Task> getTaskFromId(Collection<CommandArgument> args) {
         try {
             return Optional.ofNullable(tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())));
         } catch (TodoRuntimeException e) {
@@ -162,7 +162,7 @@ public class TaskUi {
         }
     }
 
-    private void edit(Collection<CommandArgument<String>> args) {
+    private void edit(Collection<CommandArgument> args) {
         final Optional<Task> task = getTaskFromId(args);
         if (task.isEmpty()) {
             return;
@@ -201,23 +201,23 @@ public class TaskUi {
         tasks.add(builder.build());
     }
 
-    private void open(Collection<CommandArgument<String>> args) {
+    private void open(Collection<CommandArgument> args) {
         getTaskFromId(args).ifPresent(Task::open);
     }
 
-    private void progress(Collection<CommandArgument<String>> args) {
+    private void progress(Collection<CommandArgument> args) {
         getTaskFromId(args).ifPresent(Task::inProgress);
     }
 
-    private void complete(Collection<CommandArgument<String>> args) {
+    private void complete(Collection<CommandArgument> args) {
         getTaskFromId(args).ifPresent(Task::closed);
     }
 
-    private void removeAllDone(Collection<CommandArgument<String>> args) {
+    private void removeAllDone(Collection<CommandArgument> args) {
         tasks.removeIf(task -> task.getStatus() == Status.CLOSED);
     }
 
-    private void remove(Collection<CommandArgument<String>> args) {
+    private void remove(Collection<CommandArgument> args) {
         final List<String> removePrefix = new ArrayList<>(prefixes);
         removePrefix.add("remove");
         removePrefix.add(consoleHelper.getStringParameter(args, "id").orElse("?"));
