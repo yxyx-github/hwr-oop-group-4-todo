@@ -51,7 +51,7 @@ class TaskUiTest {
             "  progress" +  System.lineSeparator() +
             "    Mark a task as in progress." +  System.lineSeparator() +
             "    -id <id>" +  System.lineSeparator() +
-            "      ID of the task which is to be set to in progrss." +  System.lineSeparator() +
+            "      ID of the task which is to be set to in progress." +  System.lineSeparator() +
             "  open" +  System.lineSeparator() +
             "    Reopens a task." +  System.lineSeparator() +
             "    -id <id>" +  System.lineSeparator() +

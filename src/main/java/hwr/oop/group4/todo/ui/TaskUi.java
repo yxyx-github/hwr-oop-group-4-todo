@@ -82,7 +82,7 @@ public class TaskUi {
                         new EntryArgument("id <id>", "ID of the completed task.")
                 )),
                 new Entry("progress", "Mark a task as in progress.", List.of(
-                        new EntryArgument("id <id>", "ID of the task which is to be set to in progrss.")
+                        new EntryArgument("id <id>", "ID of the task which is to be set to in progress.")
                 )),
                 new Entry("open", "Reopens a task.", List.of(
                         new EntryArgument("id <id>", "ID of the task which is to be set to open.")
