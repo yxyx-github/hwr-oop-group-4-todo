@@ -89,7 +89,9 @@ class TaskUiTest {
 
     @Test
     void menu() {
-        final InputStream inputStream = createInputStreamForInput("back" + System.lineSeparator());
+        final InputStream inputStream = createInputStreamForInput(
+                "bakc" + System.lineSeparator() +
+                "back" + System.lineSeparator());
         final OutputStream outputStream = new ByteArrayOutputStream();
 
         final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
