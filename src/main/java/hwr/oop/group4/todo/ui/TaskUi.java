@@ -147,7 +147,6 @@ public class TaskUi {
         mutablePrefixes.add("deadline");
         final LocalDateTime deadline = consoleController.inputDate(mutablePrefixes);
 
-
         return builder.priority(priority)
                 .deadline(deadline)
                 .build();
