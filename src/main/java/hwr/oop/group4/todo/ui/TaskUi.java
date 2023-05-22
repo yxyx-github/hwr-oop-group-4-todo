@@ -48,21 +48,22 @@ public class TaskUi {
         final AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
             consoleController.inputOptions(prefixes, List.of(
-                    new Command("list",   this::list),
-                    new Command("new",    this::create),
-                    new Command("edit",   this::edit),
+                    new Command("list", this::list),
+                    new Command("new", this::create),
+                    new Command("edit", this::edit),
                     new Command("remove", this::remove),
                     new Command("removeAllDone", this::removeAllDone),
                     new Command("complete", this::complete),
                     new Command("inProgress", this::progress),
                     new Command("open", this::open),
-                    new Command("back",   args -> shouldReturn.set(true))
-            ), new Command("wrongInput", args -> {}));
+                    new Command("back", args -> shouldReturn.set(true))
+            ), new Command("wrongInput", args -> {
+            }));
         }
     }
 
     private String getMenu() {
-        return new Menu("Task Menu", "List and Edit your Tasks." , List.of(
+        return new Menu("Task Menu", "List and Edit your Tasks.", List.of(
                 new Entry("list", "List all tasks."),
                 new Entry("new", "Create a new task."),
                 new Entry("edit", "Edit the attributes of a project.", List.of(
@@ -133,17 +134,17 @@ public class TaskUi {
         if (idea == null) {
             mutablePrefixes.add("name");
             final String name = consoleController.input(mutablePrefixes).orElseThrow();
-            mutablePrefixes.remove(mutablePrefixes.size()-1);
+            mutablePrefixes.remove(mutablePrefixes.size() - 1);
             mutablePrefixes.add("description");
             final String desc = consoleController.input(mutablePrefixes).orElseThrow();
-            mutablePrefixes.remove(mutablePrefixes.size()-1);
+            mutablePrefixes.remove(mutablePrefixes.size() - 1);
             builder.name(name).description(desc);
         } else {
             builder.fromIdea(idea);
         }
         mutablePrefixes.add("priority");
         final int priority = consoleController.inputInt(mutablePrefixes);
-        mutablePrefixes.remove(mutablePrefixes.size()-1);
+        mutablePrefixes.remove(mutablePrefixes.size() - 1);
         mutablePrefixes.add("deadline");
         final LocalDateTime deadline = consoleController.inputDate(mutablePrefixes);
 
@@ -168,7 +169,7 @@ public class TaskUi {
         }
         final Task.TaskBuilder builder = new Task.TaskBuilder();
 
-        final Optional<String> name =  consoleHelper.getStringParameter(args, "name");
+        final Optional<String> name = consoleHelper.getStringParameter(args, "name");
         final Optional<String> desc = consoleHelper.getStringParameter(args, "desc");
         final Optional<String> deadline = consoleHelper.getStringParameter(args, "deadline");
         final Optional<String> priority = consoleHelper.getStringParameter(args, "priority");
