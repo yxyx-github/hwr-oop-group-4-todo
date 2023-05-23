@@ -2,11 +2,9 @@ package hwr.oop.group4.todo.persistence;
 
 import com.google.gson.*;
 import hwr.oop.group4.todo.core.*;
+import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSerializer;
 
-import java.lang.reflect.Type;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class PersistableTodoList implements Persistable {
     private final TodoList todoList;
@@ -25,23 +23,6 @@ public class PersistableTodoList implements Persistable {
                 .registerTypeAdapter(LocalDateTime.class, new DateTimeSerializer())
                 .create();
         return gson.toJson(todoList);
-    }
-
-    private static class DateTimeSerializer implements JsonSerializer<LocalDateTime> {
-
-        @Override
-        public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.toInstant(ZoneOffset.UTC).toEpochMilli());
-        }
-    }
-
-    private static class DateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
-
-        @Override
-        public LocalDateTime deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            Instant instant = Instant.ofEpochMilli(jsonElement.getAsLong());
-            return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
-        }
     }
 
     @Override

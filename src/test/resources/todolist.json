@@ -1,9 +1,9 @@
 {
-  "maybeList": [],
   "projects": [
     {
       "name": "project a",
       "description": "",
+      "tags": [],
       "tasks": [
         {
           "name": "task c",
@@ -19,24 +19,35 @@
           "tags": [],
           "status": "OPEN"
         }
-      ],
-      "tags": []
+      ]
     }
   ],
   "inTray": [
-    {},
-    {}
+    {
+      "name": "idea a",
+      "description": "description a"
+    },
+    {
+      "name": "idea b",
+      "description": "description b"
+    }
   ],
   "loseTasks": [
     {
       "name": "task a",
       "description": "description a",
       "priority": 0,
+      "deadline": 1063004940000,
       "tags": [
-        {},
-        {}
+        {
+          "name": "tagA"
+        },
+        {
+          "name": "tagB"
+        }
       ],
       "status": "OPEN"
     }
-  ]
+  ],
+  "somedayMaybe": []
 }
