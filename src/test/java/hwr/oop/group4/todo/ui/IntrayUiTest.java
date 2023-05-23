@@ -1,6 +1,8 @@
 package hwr.oop.group4.todo.ui;
 
 import hwr.oop.group4.todo.core.Idea;
+import hwr.oop.group4.todo.core.Tag;
+import hwr.oop.group4.todo.core.Task;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -200,22 +204,23 @@ public class IntrayUiTest {
     @Test
     void canConvertIdeaToTasks() {
         InputStream inputStream = createInputStreamForInput(
-                "task" + System.lineSeparator() +
+                "task -id 0" + System.lineSeparator() +
+                "12" + System.lineSeparator() +
+                "12.12.1212 12:12" + System.lineSeparator() +
                 "back" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
         IntrayUi ui = new IntrayUi(new ConsoleController(outputStream, inputStream));
 
-        ui.menu(getExampleTodoList(true));
-        String output = retrieveResultFrom(outputStream);
+        final TodoList todoList = getExampleTodoList(true);
+        ui.menu(todoList);
 
-        assertThat(output).isEqualTo(
-                "| ID | Name                 | Description                                        |" + System.lineSeparator() +
-                        "==================================================================================" + System.lineSeparator() +
-                        "|  0 |               Parker |                                                    |" + System.lineSeparator() +
-                        "|  1 |                Peter |                                             Lustig |" + System.lineSeparator() +
-                        intrayMenuOutput +
-                        "intray:> "
-        );
+        final Task task = todoList.getLoseTasks().stream().toList().get(0);
+        assertThat(task.getName()).isEqualTo("Parker");
+        assertThat(task.getDescription()).isEmpty();
+        assertThat(task.getPriority()).isEqualTo(12);
+        assertThat(task.getDeadline()).isEqualTo(LocalDateTime.of(1212, 12, 12, 12, 12));
+
+        assertThat(todoList.getInTray().size()).isEqualTo(1);
     }
 
 }
