@@ -1,21 +1,22 @@
 package hwr.oop.group4.todo.ui;
 
+import hwr.oop.group4.todo.core.TodoList;
+import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
+import hwr.oop.group4.todo.core.api.adapter.PersistenceAdapter;
+import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class ConsoleUserInterfaceTest {
 
-    private final String loadMenuOutput =
+    private final String initMenuOutput =
             "Do you want to load from a file? (Otherwise create an empty todo list)" + System.lineSeparator() +
             "Answer y/Y/yes or n/N/no (leave empty for: no)." + System.lineSeparator() +
-            "main/load:> ";
+            "main/init:> ";
     private final String mainMenuOutput =
             "[1m<==== Main Menu ====>[0m" + System.lineSeparator() +
             "Welcome to ToDo!" + System.lineSeparator() +
@@ -25,11 +26,27 @@ class ConsoleUserInterfaceTest {
             "  tasks" + System.lineSeparator() +
             "  projects" + System.lineSeparator() +
             "  calendar" + System.lineSeparator() +
+            "  new" + System.lineSeparator() +
             "  load" + System.lineSeparator() +
+            "    -file" + System.lineSeparator() +
+            "      A path to the file." + System.lineSeparator() +
             "  save" + System.lineSeparator() +
+            "    -file" + System.lineSeparator() +
+            "      A path to the file." + System.lineSeparator() +
             "  quit" + System.lineSeparator() +
             "    Quit the program." + System.lineSeparator() +
             "main:> ";
+
+    final PersistenceFileUseCase dummyAdapter = new PersistenceFileUseCase() {
+        @Override
+        public TodoList load(File file) {
+            return new TodoList();
+        }
+
+        @Override
+        public void save(TodoList todoList, File file) {
+        }
+    };
 
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();
@@ -42,40 +59,86 @@ class ConsoleUserInterfaceTest {
 
     @Test
     void canCreateNewTodoList() {
-        InputStream inputStream = createInputStreamForInput(System.lineSeparator() + "load" + System.lineSeparator() +
-                "n" + System.lineSeparator() +  "quit" + System.lineSeparator() );
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "new" + System.lineSeparator() +
+                "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                null, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+        initMenuOutput +
                 mainMenuOutput +
-                loadMenuOutput +
                 mainMenuOutput
         );
     }
 
     @Test
-    void canLoadAndSaveTodoListFromFile() {
-        InputStream inputStream = createInputStreamForInput("yes" + System.lineSeparator() + "save" + System.lineSeparator() +
-                "load" + System.lineSeparator() + "Y" + System.lineSeparator() + "quit" + System.lineSeparator()
+    void canInitByLoad() {
+        InputStream inputStream = createInputStreamForInput("yes" + System.lineSeparator() +
+                "./Example/File/Path/file.json" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, null);
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+                initMenuOutput +
+                        "Enter the path to the file which is supposed to be loaded." + System.lineSeparator() +
+                        "main/init/load/path:> " +
+                        mainMenuOutput
+        );
+    }
+
+    @Test
+    void canLoadFromFile() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "load -file ./Example/File/Path/file.json" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+        initMenuOutput +
                 mainMenuOutput +
-                mainMenuOutput +
-                loadMenuOutput +
                 mainMenuOutput
+        );
+    }
+
+    @Test
+    void canSaveToFile() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "save -file ./Example/File/Path/file.json" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        mainMenuOutput
         );
     }
 
@@ -85,13 +148,14 @@ class ConsoleUserInterfaceTest {
                 "projects" + System.lineSeparator() + "back" + System.lineSeparator() + "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+        initMenuOutput +
                 mainMenuOutput +
                 mainMenuOutput +
                 "| ID | Name            | Description                    | Tags       | Begin  | End    |" + System.lineSeparator() +
@@ -144,13 +208,14 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+        initMenuOutput +
                 mainMenuOutput +
                 "| ID | Name                 | Description                                        |" + System.lineSeparator() +
                 "==================================================================================" + System.lineSeparator() +
@@ -183,13 +248,14 @@ class ConsoleUserInterfaceTest {
                 "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+        initMenuOutput +
                 mainMenuOutput +
                 mainMenuOutput
         );
@@ -202,13 +268,14 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
-        loadMenuOutput +
+        initMenuOutput +
                 mainMenuOutput +
                 mainMenuOutput
         );
