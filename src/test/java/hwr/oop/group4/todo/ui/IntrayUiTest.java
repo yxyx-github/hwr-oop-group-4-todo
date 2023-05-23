@@ -1,7 +1,6 @@
 package hwr.oop.group4.todo.ui;
 
 import hwr.oop.group4.todo.core.Idea;
-import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.core.Task;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
@@ -12,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
