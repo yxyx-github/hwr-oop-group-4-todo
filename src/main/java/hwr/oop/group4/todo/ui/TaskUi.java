@@ -35,7 +35,7 @@ public class TaskUi {
 
     public void menu(Project project, List<String> prefixes) {
         final List<String> modifiable = new ArrayList<>(prefixes);
-        modifiable.add("task");
+        modifiable.add("tasks");
         menu(project.getTasks(), Collections.unmodifiableList(modifiable));
     }
 

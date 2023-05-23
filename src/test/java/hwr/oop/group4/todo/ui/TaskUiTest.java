@@ -104,7 +104,7 @@ class TaskUiTest {
                 .contains("|    unnamed task |                           desd |            | 22.10.00 |       10 |       OPEN |" + System.lineSeparator())
                 .contains("|            name |                                |   123, abc |          |        0 |     CLOSED |" + System.lineSeparator())
                 .contains("|            name |                           desd |            |          |        0 |       OPEN |" + System.lineSeparator())
-                .endsWith("projects/1/task:> ");
+                .endsWith("projects/1/tasks:> ");
     }
 
     @Test
