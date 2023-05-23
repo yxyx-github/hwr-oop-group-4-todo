@@ -96,7 +96,11 @@ public class IntrayUi {
     }
 
     private void toTask(Collection<CommandArgument> args) {
-        // call TaskUi
+        final int id = consoleHelper.getId(args, todoList.getInTray().stream().toList().size());
+        final TaskUi taskUi = new TaskUi(consoleController);
+        final Idea idea = todoList.getInTray().stream().toList().get(id);
+        todoList.addLoseTask(taskUi.create(idea, List.of("intray", "task")));
+        todoList.removeIdea(idea);
     }
 
 }
