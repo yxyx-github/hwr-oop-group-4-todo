@@ -16,12 +16,14 @@ public class ConsoleUserInterface {
     private final ConsoleController consoleController;
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
+    private final TaskUi taskUi;
     private TodoList todoList;
 
     public ConsoleUserInterface(ConsoleController consoleController) {
         this.consoleController = consoleController;
         projectUi = new ProjectUi(this.consoleController);
         intrayUi = new IntrayUi(this.consoleController);
+        taskUi = new TaskUi(this.consoleController);
         load(null);
     }
 
@@ -42,7 +44,7 @@ public class ConsoleUserInterface {
 
             consoleController.inputOptions(List.of("main"), List.of(
                     new Command("intray",   args -> intrayUi.menu(todoList)),
-                    new Command("tasks",    args -> {}),
+                    new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> {}),
                     new Command("load",     this::load),
