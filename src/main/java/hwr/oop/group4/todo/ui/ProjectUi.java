@@ -1,6 +1,5 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.Project;
 import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.core.Task;
@@ -61,12 +60,13 @@ public class ProjectUi {
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
+            final int size = todoList.getProjects().size();
             consoleController.inputOptions(List.of("projects"), List.of(
                     new Command("list",   this::listProjects),
                     new Command("new",    this::newProject),
                     new Command("tasks",  args -> {}),
-                    new Command("edit",   this::editProject),
-                    new Command("remove", this::removeProject),
+                    new Command("edit",   args -> consoleController.callWithValidId(true, size, args, this::editProject)),
+                    new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeProject)),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -116,13 +116,7 @@ public class ProjectUi {
     }
 
     private void removeProject(Collection<CommandArgument> args) {
-        final int id;
-        try {
-            id = consoleHelper.getId(args, todoList.getProjects().size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
 
         final String projectName = todoList.getProjects().get(id).getName();
         final String confirmation = "Do you really want to remove " + projectName + "?";
@@ -132,13 +126,7 @@ public class ProjectUi {
     }
 
     private void editProject(Collection<CommandArgument> args) {
-        final int id;
-        try {
-            id = consoleHelper.getId(args, todoList.getProjects().size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
 
         final Project project = todoList.getProjects().get(id);
         todoList.removeProject(project);
