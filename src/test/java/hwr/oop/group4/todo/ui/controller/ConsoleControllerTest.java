@@ -2,6 +2,7 @@ package hwr.oop.group4.todo.ui.controller;
 
 import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.ui.controller.command.Command;
+import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -278,6 +280,48 @@ class ConsoleControllerTest {
         assertThat(retrieveResultFrom(outputStream)).isEqualTo("Prompt." + System.lineSeparator() +
                 "Enter a date/time formatted as 'dd.mm.yyyy' or 'dd.mm.yyyy hh:mm': :> "
         );
+    }
+
+    @Test
+    void canCallWithValidId() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+
+        class Method {
+            private boolean wasCalled;
+            public Method() { wasCalled = false; }
+            public void call(Collection<CommandArgument> args) { wasCalled = true; }
+            public boolean methodWasCalled() { return wasCalled; }
+        }
+        Method method = new Method();
+
+        final Collection<CommandArgument> args = List.of(new CommandArgument("id", "11"));
+        consoleController.callWithValidId(true, 12, args, method::call);
+
+        assertThat(method.methodWasCalled()).isTrue();
+        assertThat(retrieveResultFrom(outputStream)).isEmpty();
+    }
+
+    @Test
+    void cantCallWithInvalidId() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+
+        class Method {
+            private boolean wasCalled;
+            public Method() { wasCalled = false; }
+            public void call(Collection<CommandArgument> args) { wasCalled = true; }
+            public boolean methodWasCalled() { return wasCalled; }
+        }
+        Method method = new Method();
+
+        final Collection<CommandArgument> args = List.of(new CommandArgument("id", "11"));
+        consoleController.callWithValidId(true, 1, args, method::call);
+
+        assertThat(method.methodWasCalled()).isFalse();
+        assertThat(retrieveResultFrom(outputStream)).isEqualTo("ID parameter is invalid." + System.lineSeparator());
     }
 
 }
