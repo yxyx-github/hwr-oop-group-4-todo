@@ -20,11 +20,13 @@ public class IntrayUi {
 
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
+    private final TaskCreationUi taskCreationUi;
     private TodoList todoList;
 
     public IntrayUi(ConsoleController consoleController) {
         this.consoleController = consoleController;
         this.consoleHelper = new ConsoleHelper();
+        this.taskCreationUi = new TaskCreationUi(consoleController);
     }
 
     public void menu(TodoList todoList) {
@@ -97,9 +99,8 @@ public class IntrayUi {
 
     private void toTask(Collection<CommandArgument> args) {
         final int id = consoleHelper.getId(args, todoList.getInTray().stream().toList().size());
-        final TaskUi taskUi = new TaskUi(consoleController);
         final Idea idea = todoList.getInTray().stream().toList().get(id);
-        todoList.addLoseTask(taskUi.create(idea, List.of("intray", "task")));
+        todoList.addLoseTask(taskCreationUi.create(idea, List.of("intray", "task")));
         todoList.removeIdea(idea);
     }
 

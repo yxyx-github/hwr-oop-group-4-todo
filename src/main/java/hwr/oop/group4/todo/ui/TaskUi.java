@@ -19,13 +19,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TaskUi {
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
-
+    private final TaskCreationUi taskCreationUi;
     private List<String> prefixes;
     private Set<Task> tasks;
 
     public TaskUi(ConsoleController consoleController) {
         this.consoleController = consoleController;
         this.consoleHelper = new ConsoleHelper();
+        this.taskCreationUi = new TaskCreationUi(consoleController);
     }
 
     public void menu(TodoList todoList) {
@@ -124,33 +125,7 @@ public class TaskUi {
     }
 
     private void create(Collection<CommandArgument> args) {
-        tasks.add(create(null, prefixes));
-    }
-
-    public Task create(Idea idea, List<String> prefixes) {
-        final List<String> mutablePrefixes = new ArrayList<>(prefixes);
-        mutablePrefixes.add("new");
-        final Task.TaskBuilder builder = new Task.TaskBuilder();
-        if (idea == null) {
-            mutablePrefixes.add("name");
-            final String name = consoleController.input(mutablePrefixes).orElseThrow();
-            mutablePrefixes.remove(mutablePrefixes.size() - 1);
-            mutablePrefixes.add("description");
-            final String desc = consoleController.input(mutablePrefixes).orElseThrow();
-            mutablePrefixes.remove(mutablePrefixes.size() - 1);
-            builder.name(name).description(desc);
-        } else {
-            builder.fromIdea(idea);
-        }
-        mutablePrefixes.add("priority");
-        final int priority = consoleController.inputInt(mutablePrefixes);
-        mutablePrefixes.remove(mutablePrefixes.size() - 1);
-        mutablePrefixes.add("deadline");
-        final LocalDateTime deadline = consoleController.inputDate(mutablePrefixes);
-
-        return builder.priority(priority)
-                .deadline(deadline)
-                .build();
+        tasks.add(taskCreationUi.create(null, prefixes));
     }
 
     private void edit(Collection<CommandArgument> args) {
