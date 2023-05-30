@@ -25,11 +25,13 @@ public class ProjectUi {
 
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
+    private final TaskUi taskUi;
     private TodoList todoList;
 
     public ProjectUi(ConsoleController consoleController) {
         this.consoleController = consoleController;
         this.consoleHelper = new ConsoleHelper();
+        this.taskUi = new TaskUi(consoleController);
     }
 
     public void menu(TodoList todoList) {
@@ -64,7 +66,7 @@ public class ProjectUi {
             consoleController.inputOptions(List.of("projects"), List.of(
                     new Command("list",   this::listProjects),
                     new Command("new",    this::newProject),
-                    new Command("tasks",  args -> {}),
+                    new Command("tasks",  args -> consoleController.callWithValidId(true, size, args, this::tasks)),
                     new Command("edit",   args -> consoleController.callWithValidId(true, size, args, this::editProject)),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeProject)),
                     new Command("back",   args -> shouldReturn.set(true))
@@ -97,6 +99,12 @@ public class ProjectUi {
         }
 
         consoleController.output(projectTable.toString());
+    }
+
+    private void tasks(Collection<CommandArgument> args) {
+        final List<Project> projects = todoList.getProjects();
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
+        taskUi.menu(projects.get(id), List.of("projects", String.valueOf(id)));
     }
 
     private void newProject(Collection<CommandArgument> args) {
@@ -166,5 +174,4 @@ public class ProjectUi {
         newProject.addTasks(project.getTasks().toArray(new Task[0]));
         todoList.addProject(newProject.build());
     }
-
 }
