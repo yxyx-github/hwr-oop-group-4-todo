@@ -130,33 +130,28 @@ public class TaskUi {
 
     private void edit(Collection<CommandArgument> args) {
         final Task task = tasks.stream().toList().get(consoleHelper.getId(args, tasks.size()));
+        tasks.remove(task);
         final Task.TaskBuilder builder = new Task.TaskBuilder();
 
-        final Optional<String> name = consoleHelper.getStringParameter(args, "name");
-        final Optional<String> desc = consoleHelper.getStringParameter(args, "desc");
-        final Optional<String> deadline = consoleHelper.getStringParameter(args, "deadline");
-        final Optional<String> priority = consoleHelper.getStringParameter(args, "priority");
-        final Optional<String> addTags = consoleHelper.getStringParameter(args, "addTags");
-        final Optional<String> removeTags = consoleHelper.getStringParameter(args, "removeTags");
-
-        builder.name(name.orElse(task.getName()));
-        builder.description(desc.orElse(task.getDescription()));
-        builder.deadline(consoleHelper.parseDate(deadline.orElse("")).orElse(task.getDeadline()));
+        builder.name(consoleHelper.getStringParameter(args, "name").orElse(task.getName()));
+        builder.description(consoleHelper.getStringParameter(args, "desc").orElse(task.getDescription()));
+        builder.deadline(consoleHelper.parseDate(consoleHelper.getStringParameter(args, "deadline").orElse(""))
+                .orElse(task.getDeadline()));
 
         try {
-            builder.priority(Integer.parseInt(priority.orElse("")));
+            builder.priority(Integer.parseInt(consoleHelper.getStringParameter(args, "priority").orElse("")));
         } catch (NumberFormatException e) {
             builder.priority(task.getPriority());
         }
 
         final Set<Tag> taskTags = task.getTags();
-        tasks.remove(task);
-
-        addTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
+        consoleHelper.getStringParameter(args, "addTags")
+                .ifPresent(tags -> Arrays.stream(tags.split(" "))
                 .forEach(tag -> taskTags.add(new Tag(tag)))
         );
 
-        removeTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
+        consoleHelper.getStringParameter(args, "removeTags")
+                .ifPresent(tags -> Arrays.stream(tags.split(" "))
                 .forEach(tag -> taskTags.remove(new Tag(tag)))
         );
 
