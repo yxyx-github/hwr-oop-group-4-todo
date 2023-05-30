@@ -1,6 +1,5 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.Project;
 import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.core.Task;
@@ -104,14 +103,7 @@ public class ProjectUi {
 
     private void tasks(Collection<CommandArgument> args) {
         final List<Project> projects = todoList.getProjects();
-        final int id;
-        try {
-            id = consoleHelper.getId(args, projects.size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
-
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
         taskUi.menu(projects.get(id), List.of("projects", String.valueOf(id)));
     }
 
