@@ -37,9 +37,9 @@ This repository contains a student project created for an ongoing lecture on obj
 |   13   | :heavy_check_mark: | Creation of Tasks    | :heavy_check_mark: |
 |   14   | :heavy_check_mark: | Creation of Projects | :heavy_check_mark: |
 |   15   | :heavy_check_mark: | Creation of Tags     | :heavy_check_mark: |
-|   16   |        :x:         | View Lists           |        :x:         |
+|   16   | :heavy_check_mark: | View Lists           | :heavy_check_mark: |
 |   17   |        :x:         | Calender             |        :x:         |
-|   18   |        :x:         | Next Task            |        :x:         |
+|   18   | :heavy_check_mark: | Next Task            | :heavy_check_mark: |
 |   19   | :heavy_check_mark: | Complete a Task      | :heavy_check_mark: |
 |   20   |        :x:         | Saving of TodoLists  |        :x:         |
 |   21   |        :x:         | Loading of TodoLists |        :x:         |
