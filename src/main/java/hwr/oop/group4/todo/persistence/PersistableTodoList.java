@@ -2,6 +2,7 @@ package hwr.oop.group4.todo.persistence;
 
 import com.google.gson.*;
 import hwr.oop.group4.todo.core.*;
+import hwr.oop.group4.todo.persistence.json.adapters.deserializers.IdeaDeserializer;
 import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSerializer;
 
 import java.time.LocalDateTime;
@@ -27,37 +28,21 @@ public class PersistableTodoList implements Persistable {
 
     @Override
     public void importFromString(String dataString) {
-        /*JSONObject todoListObject = new JSONObject(dataString);
+        dataString = "{\"inTray\": [\n" +
+                "    {\n" +
+                "      \"name\": \"idea a\",\n" +
+                "      \"description\": \"description a\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"name\": \"idea b\",\n" +
+                "      \"description\": \"description b\"\n" +
+                "    }\n" +
+                "  ]}";
 
-        JSONArray projectsArray = todoListObject.getJSONArray("projects");
-        JSONArray inTrayArray = todoListObject.getJSONArray("inTray");
-        for (int i = 0; i < inTrayArray.length(); i++) {
-            Idea idea = importIdea(inTrayArray.getJSONObject(i));
-            todoList.addIdea(idea);
-        }
-        JSONArray loseTasksArray = todoListObject.getJSONArray("loseTasks");
-        for (int i = 0; i < loseTasksArray.length(); i++) {
-            Task task = importTask(loseTasksArray.getJSONObject(i));
-            todoList.addLoseTask(task);
-        }
-        JSONArray somedayMaybeArray = todoListObject.getJSONArray("somedayMaybe");*/
+        Gson gson = new GsonBuilder()
+                // .registerTypeAdapter()
+                .registerTypeAdapter(Idea.class, new IdeaDeserializer())
+                .create();
+        System.out.println(gson.fromJson(dataString, Object.class));
     }
-
-    /*private Task importTask(JSONObject taskObject) {
-        return new Task.TaskBuilder()
-                .name(taskObject.getString("name"))
-                .description(taskObject.getString("description"))
-                // TODO: deadline
-                .priority(taskObject.getInt("priority"))
-                // TODO: tags
-                .status(taskObject.getEnum(Status.class, "status"))
-                .build();
-    }
-
-    private Idea importIdea(JSONObject ideaObject) {
-        return new Idea(
-                ideaObject.getString("name"),
-                ideaObject.getString("description")
-        );
-    }*/
 }
