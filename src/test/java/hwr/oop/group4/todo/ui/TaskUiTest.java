@@ -79,6 +79,7 @@ class TaskUiTest {
 
         return new Project.ProjectBuilder()
                 .addTask(new Task.TaskBuilder().name("name").description("desd").build())
+                .addTask(new Task.TaskBuilder().name("VeryLongExampleName").description("description").build())
                 .addTask(new Task.TaskBuilder().deadline(
                                 LocalDateTime.of(2000, 10, 22, 0, 0))
                         .description("desd").priority(10).build())
@@ -101,9 +102,11 @@ class TaskUiTest {
                         "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                         "=========================================================================================================" + System.lineSeparator())
                 .contains("|            name |                            123 |            |          |        0 |     CLOSED |" + System.lineSeparator())
+                .contains("|            name |                            123 |            |          |        0 |     CLOSED |" + System.lineSeparator())
                 .contains("|    unnamed task |                           desd |            | 22.10.00 |       10 |       OPEN |" + System.lineSeparator())
                 .contains("|            name |                                |   123, abc |          |        0 |     CLOSED |" + System.lineSeparator())
                 .contains("|            name |                           desd |            |          |        0 |       OPEN |" + System.lineSeparator())
+                .contains("| VeryLongExample |                    description |            |          |        0 |       OPEN |" + System.lineSeparator())
                 .endsWith("projects/1/tasks:> ");
     }
 
@@ -264,7 +267,7 @@ class TaskUiTest {
         final Project project = getExampleProject();
         ui.menu(project, List.of(""));
 
-        assertThat(project.getTasks()).hasSize(2);
+        assertThat(project.getTasks()).hasSize(3);
     }
 
     @Test
