@@ -64,6 +64,13 @@ class TaskTest {
     }
 
     @Test
+    void getStatusFrom() {
+        Task task = new Task.TaskBuilder().status(Status.IN_PROGRESS).build();
+
+        assertThat(task.getStatus()).isEqualTo(Status.IN_PROGRESS);
+    }
+
+    @Test
     void getPriorityFrom() {
         Task task = new Task.TaskBuilder().priority(10).build();
 

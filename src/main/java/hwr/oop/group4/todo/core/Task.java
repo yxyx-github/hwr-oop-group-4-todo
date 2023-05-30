@@ -16,14 +16,15 @@ public class Task {
     private final int priority;
     private final LocalDateTime deadline;
     private final Set<Tag> tags;
-    private Status status = Status.OPEN;
+    private Status status;
 
-    private Task(String name, String description, LocalDateTime deadline, int priority, Set<Tag> tags, Project project) {
+    private Task(String name, String description, LocalDateTime deadline, int priority, Set<Tag> tags, Status status, Project project) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.priority = priority;
         this.tags = tags;
+        this.status = status;
         if (project != null) {
             project.addTask(this);
         }
@@ -90,6 +91,7 @@ public class Task {
         private LocalDateTime deadline = null;
         private int priority = 0;
         private final Set<Tag> tags = new HashSet<>();
+        private Status status = Status.OPEN;
         private Project project;
 
         public TaskBuilder() {
@@ -125,6 +127,11 @@ public class Task {
             return this;
         }
 
+        public TaskBuilder status(Status status) {
+            this.status = status;
+            return this;
+        }
+
         public TaskBuilder project(Project project) {
             this.project = project;
             return this;
@@ -137,7 +144,7 @@ public class Task {
         }
 
         public Task build() {
-            return new Task(name, description, deadline, priority, tags, project);
+            return new Task(name, description, deadline, priority, tags, status, project);
         }
     }
 
