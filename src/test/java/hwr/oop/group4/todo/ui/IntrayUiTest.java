@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class IntrayUiTest {
+class IntrayUiTest {
 
     private final String intrayMenuOutput =
             "[1m<==== Intray Menu ====>[0m" + System.lineSeparator() +
