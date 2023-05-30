@@ -1,6 +1,7 @@
 package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
+import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,7 +12,8 @@ import java.util.Scanner;
 public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapter {
 
     @Override
-    public void save(Persistable data, File file) {
+    public void save(Persistable data, FileAdapterConfiguration config) {
+        File file = config.getFile().orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -26,7 +28,8 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
     }
 
     @Override
-    public Persistable load(Persistable data, File file) {
+    public Persistable load(Persistable data, FileAdapterConfiguration config) {
+        File file = config.getFile().orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         StringBuilder output = new StringBuilder();
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
