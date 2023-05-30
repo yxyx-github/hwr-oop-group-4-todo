@@ -1,6 +1,5 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.*;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
@@ -47,15 +46,16 @@ public class TaskUi {
         list(null);
         final AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
+            final int size = tasks.size();
             consoleController.inputOptions(prefixes, List.of(
                     new Command("list", this::list),
                     new Command("new", this::create),
-                    new Command("edit", this::edit),
-                    new Command("remove", this::remove),
+                    new Command("edit", args -> consoleController.callWithValidId(true, size, args, this::edit)),
+                    new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::remove)),
                     new Command("removeAllDone", this::removeAllDone),
-                    new Command("complete", this::complete),
-                    new Command("inProgress", this::progress),
-                    new Command("open", this::open),
+                    new Command("complete", args -> consoleController.callWithValidId(true, size, args, this::complete)),
+                    new Command("inProgress", args -> consoleController.callWithValidId(true, size, args, this::progress)),
+                    new Command("open", args -> consoleController.callWithValidId(true, size, args, this::open)),
                     new Command("back", args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {
             }));
@@ -153,20 +153,8 @@ public class TaskUi {
                 .build();
     }
 
-    private Optional<Task> getTaskFromId(Collection<CommandArgument> args) {
-        try {
-            return Optional.ofNullable(tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())));
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return Optional.empty();
-        }
-    }
-
     private void edit(Collection<CommandArgument> args) {
-        final Optional<Task> task = getTaskFromId(args);
-        if (task.isEmpty()) {
-            return;
-        }
+        final Task task = tasks.stream().toList().get(consoleHelper.getId(args, tasks.size()));
         final Task.TaskBuilder builder = new Task.TaskBuilder();
 
         final Optional<String> name = consoleHelper.getStringParameter(args, "name");
@@ -176,18 +164,18 @@ public class TaskUi {
         final Optional<String> addTags = consoleHelper.getStringParameter(args, "addTags");
         final Optional<String> removeTags = consoleHelper.getStringParameter(args, "removeTags");
 
-        builder.name(name.orElse(task.get().getName()));
-        builder.description(desc.orElse(task.get().getDescription()));
-        builder.deadline(consoleHelper.parseDate(deadline.orElse("")).orElse(task.get().getDeadline()));
+        builder.name(name.orElse(task.getName()));
+        builder.description(desc.orElse(task.getDescription()));
+        builder.deadline(consoleHelper.parseDate(deadline.orElse("")).orElse(task.getDeadline()));
 
         try {
             builder.priority(Integer.parseInt(priority.orElse("")));
         } catch (NumberFormatException e) {
-            builder.priority(task.get().getPriority());
+            builder.priority(task.getPriority());
         }
 
-        final Set<Tag> taskTags = task.get().getTags();
-        tasks.remove(task.get());
+        final Set<Tag> taskTags = task.getTags();
+        tasks.remove(task);
 
         addTags.ifPresent(tags -> Arrays.stream(tags.split(" "))
                 .forEach(tag -> taskTags.add(new Tag(tag)))
@@ -202,15 +190,15 @@ public class TaskUi {
     }
 
     private void open(Collection<CommandArgument> args) {
-        getTaskFromId(args).ifPresent(Task::open);
+        tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())).open();
     }
 
     private void progress(Collection<CommandArgument> args) {
-        getTaskFromId(args).ifPresent(Task::inProgress);
+        tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())).inProgress();
     }
 
     private void complete(Collection<CommandArgument> args) {
-        getTaskFromId(args).ifPresent(Task::closed);
+        tasks.stream().toList().get(consoleHelper.getId(args, tasks.size())).closed();
     }
 
     private void removeAllDone(Collection<CommandArgument> args) {
@@ -222,13 +210,10 @@ public class TaskUi {
         removePrefix.add("remove");
         removePrefix.add(consoleHelper.getStringParameter(args, "id").orElse("?"));
 
-        final Optional<Task> task = getTaskFromId(args);
-        if (task.isEmpty()) {
-            return;
-        }
-        final String confirmation = "Do you really want to remove " + task.get().getName() + "?";
+        final Task task = tasks.stream().toList().get(consoleHelper.getId(args, tasks.size()));
+        final String confirmation = "Do you really want to remove " + task.getName() + "?";
         if (consoleController.inputBool(removePrefix, confirmation, false)) {
-            tasks.remove(task.get());
+            tasks.remove(task);
         }
     }
 }
