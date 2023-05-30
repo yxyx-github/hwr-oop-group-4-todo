@@ -14,11 +14,14 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
     public void save(Persistable data, File file) {
         try {
             file.createNewFile();
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.write(data.exportAsString());
-            }
         } catch (IOException e) {
-            throw new PersistenceRuntimeException("Cannot create or write file", e);
+            throw new PersistenceRuntimeException("Cannot create file", e);
+        }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(data.exportAsString());
+        } catch (IOException e) {
+            throw new PersistenceRuntimeException("Cannot write file", e);
         }
     }
 
