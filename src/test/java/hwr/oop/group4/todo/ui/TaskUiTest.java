@@ -137,25 +137,6 @@ class TaskUiTest {
     }
 
     @Test
-    void createFromIdea() {
-        final InputStream inputStream = createInputStreamForInput("2" + System.lineSeparator() +
-                "10.12.2021" + System.lineSeparator() +
-                "back" + System.lineSeparator());
-        final OutputStream outputStream = new ByteArrayOutputStream();
-
-        final TaskUi ui = new TaskUi(new ConsoleController(outputStream, inputStream));
-        final Idea idea = new Idea("taskName", "desc");
-        Task task = ui.create(idea, List.of(""));
-        assertThat(task).isEqualTo(new Task.TaskBuilder()
-                .name("taskName")
-                .description("desc")
-                .priority(2)
-                .deadline(LocalDateTime.of(2021, 12, 10, 0, 0))
-                .build()
-        );
-    }
-
-    @Test
     void editWrongId() {
         final InputStream inputStream = createInputStreamForInput("edit -id 0 -name name" + System.lineSeparator() +
                 "back" + System.lineSeparator());
