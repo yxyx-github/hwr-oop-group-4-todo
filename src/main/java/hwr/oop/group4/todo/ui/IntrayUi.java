@@ -1,6 +1,5 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.Idea;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
@@ -21,11 +20,13 @@ public class IntrayUi {
 
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
+    private final TaskCreationUi taskCreationUi;
     private TodoList todoList;
 
     public IntrayUi(ConsoleController consoleController) {
         this.consoleController = consoleController;
         this.consoleHelper = new ConsoleHelper();
+        this.taskCreationUi = new TaskCreationUi(consoleController);
     }
 
     public void menu(TodoList todoList) {
@@ -47,11 +48,12 @@ public class IntrayUi {
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
+            final int size = todoList.getInTray().size();
             consoleController.inputOptions(List.of("intray"), List.of(
                     new Command("list", this::listItems),
                     new Command("new", this::newItem),
-                    new Command("remove", this::removeItem),
-                    new Command("task", this::toTask),
+                    new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeItem)),
+                    new Command("task", args -> consoleController.callWithValidId(true, size, args, this::toTask)),
                     new Command("back", args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -86,13 +88,7 @@ public class IntrayUi {
     }
 
     private void removeItem(Collection<CommandArgument> args) {
-        final int id;
-        try {
-            id = consoleHelper.getId(args, todoList.getInTray().stream().toList().size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
+        final int id = consoleHelper.getId(args, todoList.getInTray().stream().toList().size());
 
         final String ideaName = todoList.getInTray().stream().toList().get(id).name();
         final String confirmation = "Do you really want to remove " + ideaName + "?";
@@ -102,7 +98,10 @@ public class IntrayUi {
     }
 
     private void toTask(Collection<CommandArgument> args) {
-        // call TaskUi
+        final int id = consoleHelper.getId(args, todoList.getInTray().stream().toList().size());
+        final Idea idea = todoList.getInTray().stream().toList().get(id);
+        todoList.addLoseTask(taskCreationUi.create(idea, List.of("intray", "task")));
+        todoList.removeIdea(idea);
     }
 
 }

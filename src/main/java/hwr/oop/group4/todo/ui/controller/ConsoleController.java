@@ -1,5 +1,6 @@
 package hwr.oop.group4.todo.ui.controller;
 
+import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.ui.controller.command.Command;
 import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ConsoleController {
 
@@ -149,6 +151,19 @@ public class ConsoleController {
         }
         stringBuilder.append(prefixes.get(prefixes.size() - 1)).append(":> ");
         return stringBuilder.toString();
+    }
+
+    public void callWithValidId(boolean printErrMsg, int size, Collection<CommandArgument> args, Consumer<Collection<CommandArgument>> method) {
+        try {
+            consoleHelper.getId(args, size);
+        } catch (TodoRuntimeException e) {
+            if (printErrMsg) {
+                outputLine(e.getMessage());
+            }
+            return;
+        }
+
+        method.accept(args);
     }
 
 }

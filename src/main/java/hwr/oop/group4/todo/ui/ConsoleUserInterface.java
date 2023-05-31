@@ -24,17 +24,16 @@ public class ConsoleUserInterface {
     final TodoListCreationUseCase creationAdapter;
 
     private final ConsoleController consoleController;
-    private final ConsoleHelper consoleHelper;
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
+    private final TaskUi taskUi;
     private TodoList todoList;
 
     public ConsoleUserInterface(ConsoleController consoleController, PersistenceFileUseCase persistenceAdapter,
                                 TodoListCreationUseCase creationAdapter) {
-        this.consoleController = consoleController;
-        this.consoleHelper = new ConsoleHelper();
         projectUi = new ProjectUi(consoleController);
         intrayUi = new IntrayUi(consoleController);
+        taskUi = new TaskUi(consoleController);
         this.persistenceAdapter = persistenceAdapter;
         this.creationAdapter = creationAdapter;
         initialiseTodoList();
@@ -59,8 +58,8 @@ public class ConsoleUserInterface {
             consoleController.output(menu.toString());
 
             consoleController.inputOptions(List.of("main"), List.of(
-                    new Command("intray", args -> intrayUi.menu(todoList)),
-                    new Command("tasks", args -> {}),
+                    new Command("intray",   args -> intrayUi.menu(todoList)),
+                    new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> {}),
                     new Command("new", this::create),

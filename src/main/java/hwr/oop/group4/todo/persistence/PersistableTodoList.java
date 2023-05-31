@@ -15,4 +15,9 @@ public class PersistableTodoList implements Persistable {
         JSONObject todoListObject = new JSONObject(todoList);
         return todoListObject.toString();
     }
+
+    @Override
+    public void importFromString(String dataString) {
+
+    }
 }

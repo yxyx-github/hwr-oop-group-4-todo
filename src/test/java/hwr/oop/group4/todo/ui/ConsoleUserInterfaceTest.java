@@ -148,8 +148,7 @@ class ConsoleUserInterfaceTest {
                 "projects" + System.lineSeparator() + "back" + System.lineSeparator() + "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
-                dummyAdapter, new TodoListCreationAdapter());
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -244,7 +243,9 @@ class ConsoleUserInterfaceTest {
 
     @Test
     void canOpenTasksMenu() {
-        InputStream inputStream = createInputStreamForInput(System.lineSeparator() + "tasks" + System.lineSeparator() +
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "tasks" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
                 "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
@@ -252,13 +253,66 @@ class ConsoleUserInterfaceTest {
                 dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
-        String output = retrieveResultFrom(outputStream);
+        final String output = retrieveResultFrom(outputStream);
 
         assertThat(output).isEqualTo(
         initMenuOutput +
                 mainMenuOutput +
                 mainMenuOutput
         );
+        assertThat(output).
+                isEqualTo(initMenuOutput +
+                        mainMenuOutput +
+                        "[1m<==== Task Menu ====>[0m" + System.lineSeparator() +
+                        "List and Edit your Tasks." + System.lineSeparator() + System.lineSeparator() +
+                        "Commands: " + System.lineSeparator() +
+                        "  list" + System.lineSeparator() +
+                        "    List all tasks." + System.lineSeparator() +
+                        "  new" + System.lineSeparator() +
+                        "    Create a new task." + System.lineSeparator() +
+                        "  edit" + System.lineSeparator() +
+                        "    Edit the attributes of a project." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the task to be edited." + System.lineSeparator() +
+                        "    -name <name>" + System.lineSeparator() +
+                        "      Change the name of the task." + System.lineSeparator() +
+                        "    -desc <desc>" + System.lineSeparator() +
+                        "      Change the description of the task." + System.lineSeparator() +
+                        "    -priority <priority>" + System.lineSeparator() +
+                        "      Change the priority of the task." + System.lineSeparator() +
+                        "    -deadline <deadline>" + System.lineSeparator() +
+                        "      Change the deadline of the task." + System.lineSeparator() +
+                        "    -addTags <tag> <tag>" + System.lineSeparator() +
+                        "      Add a new tags." + System.lineSeparator() +
+                        "    -removeTag <tag> <tag>" + System.lineSeparator() +
+                        "      Remove tags." + System.lineSeparator() +
+                        "  remove" + System.lineSeparator() +
+                        "    Remove a task." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the task to be removed" + System.lineSeparator() +
+                        "  removeAllDone" + System.lineSeparator() +
+                        "    Remove all task that are done." + System.lineSeparator() +
+                        "  complete" + System.lineSeparator() +
+                        "    Mark a task as done." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the completed task." + System.lineSeparator() +
+                        "  progress" + System.lineSeparator() +
+                        "    Mark a task as in progress." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the task which is to be set to in progress." + System.lineSeparator() +
+                        "  open" + System.lineSeparator() +
+                        "    Reopens a task." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the task which is to be set to open." + System.lineSeparator() +
+                        "  back" + System.lineSeparator() +
+                        "    Returns to the previous menu." + System.lineSeparator() +
+                        "  help" + System.lineSeparator() +
+                        "    Prints this Menu again." + System.lineSeparator() +
+                        "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
+                        "=========================================================================================================" + System.lineSeparator() +
+                        "tasks:> " +
+                        mainMenuOutput
+                );
     }
 
     @Test

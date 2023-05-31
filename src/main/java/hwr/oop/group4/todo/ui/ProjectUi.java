@@ -1,6 +1,5 @@
 package hwr.oop.group4.todo.ui;
 
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.Project;
 import hwr.oop.group4.todo.core.Tag;
 import hwr.oop.group4.todo.core.Task;
@@ -26,11 +25,13 @@ public class ProjectUi {
 
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
+    private final TaskUi taskUi;
     private TodoList todoList;
 
     public ProjectUi(ConsoleController consoleController) {
         this.consoleController = consoleController;
         this.consoleHelper = new ConsoleHelper();
+        this.taskUi = new TaskUi(consoleController);
     }
 
     public void menu(TodoList todoList) {
@@ -61,12 +62,13 @@ public class ProjectUi {
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
+            final int size = todoList.getProjects().size();
             consoleController.inputOptions(List.of("projects"), List.of(
                     new Command("list",   this::listProjects),
                     new Command("new",    this::newProject),
-                    new Command("tasks",  args -> {}),
-                    new Command("edit",   this::editProject),
-                    new Command("remove", this::removeProject),
+                    new Command("tasks",  args -> consoleController.callWithValidId(true, size, args, this::tasks)),
+                    new Command("edit",   args -> consoleController.callWithValidId(true, size, args, this::editProject)),
+                    new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeProject)),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -99,6 +101,12 @@ public class ProjectUi {
         consoleController.output(projectTable.toString());
     }
 
+    private void tasks(Collection<CommandArgument> args) {
+        final List<Project> projects = todoList.getProjects();
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
+        taskUi.menu(projects.get(id), List.of("projects", String.valueOf(id)));
+    }
+
     private void newProject(Collection<CommandArgument> args) {
         String name = consoleController.input(List.of("projects", "new", "name")).orElseThrow();
         String desc = consoleController.input(List.of("projects", "new", "description")).orElseThrow();
@@ -116,13 +124,7 @@ public class ProjectUi {
     }
 
     private void removeProject(Collection<CommandArgument> args) {
-        final int id;
-        try {
-            id = consoleHelper.getId(args, todoList.getProjects().size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
 
         final String projectName = todoList.getProjects().get(id).getName();
         final String confirmation = "Do you really want to remove " + projectName + "?";
@@ -132,13 +134,7 @@ public class ProjectUi {
     }
 
     private void editProject(Collection<CommandArgument> args) {
-        final int id;
-        try {
-            id = consoleHelper.getId(args, todoList.getProjects().size());
-        } catch (TodoRuntimeException e) {
-            consoleController.outputLine(e.getMessage());
-            return;
-        }
+        final int id = consoleHelper.getId(args, todoList.getProjects().size());
 
         final Project project = todoList.getProjects().get(id);
         todoList.removeProject(project);
@@ -178,5 +174,4 @@ public class ProjectUi {
         newProject.addTasks(project.getTasks().toArray(new Task[0]));
         todoList.addProject(newProject.build());
     }
-
 }
