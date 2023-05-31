@@ -34,7 +34,7 @@ public class CalendarUi {
             new Entry("today", ""),
             new Entry("nextWeek", ""),
             new Entry("lastWeek", ""),
-            new Entry("back", "Return to the previous menu \n")
+            new Entry("back", "Return to the previous menu" + System.lineSeparator())
         ));
         consoleController.output(menu.toString());
 
