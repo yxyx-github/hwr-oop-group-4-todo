@@ -24,6 +24,7 @@ public class ConsoleUserInterface {
     final TodoListCreationUseCase creationAdapter;
 
     private final ConsoleController consoleController;
+    private final ConsoleHelper consoleHelper;
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
     private final TaskUi taskUi;
@@ -31,6 +32,8 @@ public class ConsoleUserInterface {
 
     public ConsoleUserInterface(ConsoleController consoleController, PersistenceFileUseCase persistenceAdapter,
                                 TodoListCreationUseCase creationAdapter) {
+        this.consoleController = consoleController;
+        this.consoleHelper = new ConsoleHelper();
         projectUi = new ProjectUi(consoleController);
         intrayUi = new IntrayUi(consoleController);
         taskUi = new TaskUi(consoleController);

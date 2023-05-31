@@ -148,7 +148,7 @@ class ConsoleUserInterfaceTest {
                 "projects" + System.lineSeparator() + "back" + System.lineSeparator() + "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream), dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -255,11 +255,6 @@ class ConsoleUserInterfaceTest {
 
         final String output = retrieveResultFrom(outputStream);
 
-        assertThat(output).isEqualTo(
-        initMenuOutput +
-                mainMenuOutput +
-                mainMenuOutput
-        );
         assertThat(output).
                 isEqualTo(initMenuOutput +
                         mainMenuOutput +
