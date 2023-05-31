@@ -34,13 +34,13 @@ This repository contains a student project created for an ongoing lecture on obj
 
 | Number |    Implemented     | Feature              |       Tests        |
 |:------:|:------------------:|----------------------|:------------------:|
-|   13   |        :x:         | Creation of Tasks    |        :x:         |
+|   13   | :heavy_check_mark: | Creation of Tasks    | :heavy_check_mark: |
 |   14   | :heavy_check_mark: | Creation of Projects | :heavy_check_mark: |
-|   15   |        :x:         | Creation of Tags     |        :x:         |
-|   16   |        :x:         | View Lists           |        :x:         |
+|   15   | :heavy_check_mark: | Creation of Tags     | :heavy_check_mark: |
+|   16   | :heavy_check_mark: | View Lists           | :heavy_check_mark: |
 |   17   |        :x:         | Calender             |        :x:         |
-|   18   |        :x:         | Next Task            |        :x:         |
-|   19   |        :x:         | Complete a Task      |        :x:         |
+|   18   | :heavy_check_mark: | Next Task            | :heavy_check_mark: |
+|   19   | :heavy_check_mark: | Complete a Task      | :heavy_check_mark: |
 |   20   |        :x:         | Saving of TodoLists  |        :x:         |
 |   21   |        :x:         | Loading of TodoLists |        :x:         |
 

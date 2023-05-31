@@ -16,6 +16,7 @@ public class ConsoleUserInterface {
     private final ConsoleController consoleController;
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
+    private final TaskUi taskUi;
     private final CalendarUi calendarUi;
     private TodoList todoList;
 
@@ -24,6 +25,7 @@ public class ConsoleUserInterface {
         projectUi = new ProjectUi(this.consoleController);
         intrayUi = new IntrayUi(this.consoleController);
         calendarUi = new CalendarUi(this.consoleController);
+        taskUi = new TaskUi(this.consoleController);
         load(null);
     }
 
@@ -44,7 +46,7 @@ public class ConsoleUserInterface {
 
             consoleController.inputOptions(List.of("main"), List.of(
                     new Command("intray",   args -> intrayUi.menu(todoList)),
-                    new Command("tasks",    args -> {}),
+                    new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> calendarUi.menu(todoList)),
                     new Command("load",     this::load),
@@ -54,10 +56,10 @@ public class ConsoleUserInterface {
         }
     }
 
-    private void save(Collection<CommandArgument<String>> args) {
+    private void save(Collection<CommandArgument> args) {
     }
 
-    private void load(Collection<CommandArgument<String>> args) {
+    private void load(Collection<CommandArgument> args) {
         String question = "Do you want to load from a file? (Otherwise create an empty todo list)";
         boolean loadFromFile = consoleController.inputBool(List.of("main", "load"), question, false);
 
