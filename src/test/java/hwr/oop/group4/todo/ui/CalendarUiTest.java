@@ -3,21 +3,17 @@ package hwr.oop.group4.todo.ui;
 import hwr.oop.group4.todo.core.Project;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
-import org.assertj.core.api.LocalDateAssert;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.setLenientDateParsing;
 
+//System date is manipulated for these tests
 class CalendarUiTest {
 
     private final String calendarMenuOutput =
@@ -30,16 +26,25 @@ class CalendarUiTest {
                     "  back" + System.lineSeparator() +
                     "    Return to the previous menu" + System.lineSeparator() +
                     System.lineSeparator();
-    //System date is manipulated for these tests
+
     private final String todayCalendar =
             "| Mon - 29.05.23  | Tue - 30.05.23  | Wed - 31.05.23  | Thu - 01.06.23  | Fri - 02.06.23  | Sat - 03.06.23  | Sun - 04.06.23  |" + System.lineSeparator() +
-            "===============================================================================================================================" + System.lineSeparator() +
-            "|     TestProject |     TestProject |     TestProject |     TestProject |     TestProject |                 |                 |" + System.lineSeparator() +
-            "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
+                    "===============================================================================================================================" + System.lineSeparator() +
+                    "|     TestProject |     TestProject |     TestProject |     TestProject |     TestProject |                 |                 |" + System.lineSeparator() +
+                    "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
+
     private final String nextWeekCalendar =
-            "";
+            "| Mon - 05.06.23  | Tue - 06.06.23  | Wed - 07.06.23  | Thu - 08.06.23  | Fri - 09.06.23  | Sat - 10.06.23  | Sun - 11.06.23  |" + System.lineSeparator() +
+            "===============================================================================================================================" + System.lineSeparator() +
+            "|                 |                 |                 |                 |                 |                 |                 |" + System.lineSeparator() +
+            "|             ICE |                 |                 |                 |                 |                 |                 |" + System.lineSeparator();
+
     private final String lastWeekCalendar =
-            "";
+            "| Mon - 22.05.23  | Tue - 23.05.23  | Wed - 24.05.23  | Thu - 25.05.23  | Fri - 26.05.23  | Sat - 27.05.23  | Sun - 28.05.23  |" + System.lineSeparator() +
+            "===============================================================================================================================" + System.lineSeparator() +
+            "|                 |                 |                 |     TestProject |     TestProject |     TestProject |     TestProject |" + System.lineSeparator() +
+            "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
+
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();
     }
@@ -73,6 +78,7 @@ class CalendarUiTest {
 
         return todoList;
     }
+
     @Test
     void canListCalendar() {
         InputStream inputStream = createInputStreamForInput("today" + System.lineSeparator() + "back" + System.lineSeparator());
@@ -83,7 +89,7 @@ class CalendarUiTest {
 
         String output = retrieveResultFrom(outputStream);
 
-        assertThat(output).contains(calendarMenuOutput + todayCalendar);
+        assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + todayCalendar + "calendar:> ");
     }
 
     @Test
@@ -95,7 +101,7 @@ class CalendarUiTest {
         ui.menu(getExampleTodoList(true));
 
         String output = retrieveResultFrom(outputStream);
-        assertThat(output).contains(calendarMenuOutput + todayCalendar + "calendar:>");
+        assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + nextWeekCalendar + "calendar:> ");
     }
 
     @Test
@@ -107,7 +113,7 @@ class CalendarUiTest {
         ui.menu(getExampleTodoList(true));
 
         String output = retrieveResultFrom(outputStream);
-        assertThat(output).contains(calendarMenuOutput + todayCalendar);
+        assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + lastWeekCalendar + "calendar:> ");
     }
 
     @Test
@@ -119,6 +125,6 @@ class CalendarUiTest {
         ui.menu(getExampleTodoList(true));
 
         String output = retrieveResultFrom(outputStream);
-        assertThat(output).contains(calendarMenuOutput + todayCalendar + "calendar:>");
+        assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + todayCalendar + "calendar:> ");
     }
 }
