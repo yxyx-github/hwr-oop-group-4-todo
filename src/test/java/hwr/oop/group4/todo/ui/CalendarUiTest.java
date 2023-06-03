@@ -9,13 +9,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 //System date is manipulated for these tests
 class CalendarUiTest {
 
+    private  final LocalDate date = LocalDate.now();
+    private final LocalDate monday = date.minusDays(date.getDayOfWeek().getValue() - 1);
     private final String calendarMenuOutput =
             "[1m<==== Calendar Menu ====>[0m" + System.lineSeparator() +
                     System.lineSeparator() +
@@ -28,22 +32,40 @@ class CalendarUiTest {
                     System.lineSeparator();
 
     private final String todayCalendar =
-            "| Mon - 29.05.23  | Tue - 30.05.23  | Wed - 31.05.23  | Thu - 01.06.23  | Fri - 02.06.23  | Sat - 03.06.23  | Sun - 04.06.23  |" + System.lineSeparator() +
-                    "===============================================================================================================================" + System.lineSeparator() +
-                    "|     TestProject |     TestProject |     TestProject |     TestProject |     TestProject |                 |                 |" + System.lineSeparator() +
-                    "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
+            "| Mon - " + monday.format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Tue - " + monday.plusDays(1).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Wed - " + monday.plusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Thu - " + monday.plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Fri - " + monday.plusDays(4).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sat - " + monday.plusDays(5).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sun - " + monday.plusDays(6).format(DateTimeFormatter.ofPattern("dd.MM.yy")) + "  |" + System.lineSeparator() +
+            "===============================================================================================================================" + System.lineSeparator() +
+            "|     TestProject |     TestProject |     TestProject |     TestProject |                 |                 |                 |" + System.lineSeparator() +
+            "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
 
     private final String nextWeekCalendar =
-            "| Mon - 05.06.23  | Tue - 06.06.23  | Wed - 07.06.23  | Thu - 08.06.23  | Fri - 09.06.23  | Sat - 10.06.23  | Sun - 11.06.23  |" + System.lineSeparator() +
+            "| Mon - " + monday.plusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Tue - " + monday.plusDays(8).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Wed - " + monday.plusDays(9).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Thu - " + monday.plusDays(10).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Fri - " + monday.plusDays(11).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sat - " + monday.plusDays(12).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sun - " + monday.plusDays(13).format(DateTimeFormatter.ofPattern("dd.MM.yy")) + "  |" + System.lineSeparator() +
             "===============================================================================================================================" + System.lineSeparator() +
             "|                 |                 |                 |                 |                 |                 |                 |" + System.lineSeparator() +
-            "|             ICE |                 |                 |                 |                 |                 |                 |" + System.lineSeparator();
+            "|             ICE |             ICE |             ICE |                 |                 |                 |                 |" + System.lineSeparator();
 
     private final String lastWeekCalendar =
-            "| Mon - 22.05.23  | Tue - 23.05.23  | Wed - 24.05.23  | Thu - 25.05.23  | Fri - 26.05.23  | Sat - 27.05.23  | Sun - 28.05.23  |" + System.lineSeparator() +
+            "| Mon - " + monday.minusDays(7).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Tue - " + monday.minusDays(6).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Wed - " + monday.minusDays(5).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Thu - " + monday.minusDays(4).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Fri - " + monday.minusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sat - " + monday.minusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yy")) +
+            "  | Sun - " + monday.minusDays(1).format(DateTimeFormatter.ofPattern("dd.MM.yy")) + "  |" + System.lineSeparator() +
             "===============================================================================================================================" + System.lineSeparator() +
-            "|                 |                 |                 |     TestProject |     TestProject |     TestProject |     TestProject |" + System.lineSeparator() +
-            "|             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |             ICE |" + System.lineSeparator();
+            "|                 |                 |                 |                 |                 |                 |                 |" + System.lineSeparator() +
+            "|                 |                 |                 |                 |                 |             ICE |             ICE |" + System.lineSeparator();
 
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();
@@ -64,17 +86,16 @@ class CalendarUiTest {
         todoList.addProject(new Project.ProjectBuilder()
                 .name("TestProject")
                 .description("Bla")
-                .begin(LocalDateTime.of(2023, 5, 25, 8, 45))
-                .end(LocalDateTime.of(2023, 6, 2, 12, 15))
-                .build()
-        );
+                .begin(LocalDateTime.of(monday.getYear(), monday.getMonth(), monday.getDayOfMonth(), 8, 45))
+                .end(LocalDateTime.of(monday.getYear(), monday.plusDays(3).getMonth(), monday.plusDays(3).getDayOfMonth(), 12, 15))
+                .build());
+
         todoList.addProject(new Project.ProjectBuilder()
                 .name("ICE")
                 .description("2nd Gen")
-                .begin(LocalDateTime.of(2023, 5, 22, 5, 45))
-                .end(LocalDateTime.of(2023, 6, 5, 0, 1))
-                .build()
-        );
+                .begin(LocalDateTime.of(monday.getYear(), monday.minusDays(2).getMonth(), monday.minusDays(2).getDayOfMonth(), 5, 45))
+                .end(LocalDateTime.of(monday.getYear(), monday.plusDays(9).getMonth(), monday.plusDays(9).getDayOfMonth(), 0, 1))
+                .build());
 
         return todoList;
     }
