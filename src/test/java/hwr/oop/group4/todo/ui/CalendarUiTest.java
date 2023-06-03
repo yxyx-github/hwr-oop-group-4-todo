@@ -76,12 +76,8 @@ class CalendarUiTest {
         return new ByteArrayInputStream(inputInBytes);
     }
 
-    private TodoList getExampleTodoList(boolean addExampleProjects) {
+    private TodoList getExampleTodoList() {
         TodoList todoList = new TodoList();
-
-        if (!addExampleProjects) {
-            return todoList;
-        }
 
         todoList.addProject(new Project.ProjectBuilder()
                 .name("TestProject")
@@ -106,7 +102,7 @@ class CalendarUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         CalendarUi ui = new CalendarUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
 
@@ -119,7 +115,7 @@ class CalendarUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         CalendarUi ui = new CalendarUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + nextWeekCalendar + "calendar:> ");
@@ -131,7 +127,7 @@ class CalendarUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         CalendarUi ui = new CalendarUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + lastWeekCalendar + "calendar:> ");
@@ -139,11 +135,11 @@ class CalendarUiTest {
 
     @Test
     void wrongInput() {
-        InputStream inputStream = createInputStreamForInput("" + System.lineSeparator() + "back" + System.lineSeparator());
+        InputStream inputStream = createInputStreamForInput("ThisMightBeAWrongInput" + System.lineSeparator() + "back" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
         CalendarUi ui = new CalendarUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(calendarMenuOutput + todayCalendar + "calendar:> " + todayCalendar + "calendar:> ");
