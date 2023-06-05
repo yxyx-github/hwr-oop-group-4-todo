@@ -15,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-//System date is manipulated for these tests
 class CalendarUiTest {
 
     private  final LocalDate date = LocalDate.now();
