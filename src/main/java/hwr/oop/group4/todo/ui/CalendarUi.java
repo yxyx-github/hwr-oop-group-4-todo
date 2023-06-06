@@ -3,7 +3,6 @@ package hwr.oop.group4.todo.ui;
 import hwr.oop.group4.todo.core.Project;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
-import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
 import hwr.oop.group4.todo.ui.controller.command.Command;
 import hwr.oop.group4.todo.ui.controller.menu.Entry;
 import hwr.oop.group4.todo.ui.controller.menu.Menu;
@@ -20,13 +19,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CalendarUi {
     private final ConsoleController consoleController;
-    private final ConsoleHelper consoleHelper;
     private TodoList todoList;
     private LocalDate date = LocalDate.now();
 
     public CalendarUi(ConsoleController consoleController){
         this.consoleController = consoleController;
-        this.consoleHelper = new ConsoleHelper();
     }
     public void menu(TodoList todoList){
         this.todoList = todoList;
