@@ -130,4 +130,23 @@ class ConsoleHelperTest {
         assertThat(returnValue).isEqualTo("a, b, c");
     }
 
+    @Test
+    void addPrefix() {
+        final ConsoleHelper consoleHelper = new ConsoleHelper();
+        final List<String> unmodifiableBase = List.of("main", "prefix", "base");
+
+        System.out.println();
+        assertThat(consoleHelper.addPrefix(unmodifiableBase, "addedPrefix"))
+                .isEqualTo(List.of("main", "prefix", "base", "addedPrefix"));
+    }
+
+    @Test
+    void addNullPrefix() {
+        final ConsoleHelper consoleHelper = new ConsoleHelper();
+        final List<String> unmodifiableBase = List.of("main", "prefix", "base");
+
+        System.out.println();
+        assertThat(consoleHelper.addPrefix(unmodifiableBase, null))
+                .isEqualTo(List.of("main", "prefix", "base"));
+    }
 }

@@ -11,7 +11,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class ConsoleHelper {
 
@@ -85,4 +87,11 @@ public class ConsoleHelper {
         return stringBuilder.toString();
     }
 
+    public List<String> addPrefix(List<String> basePrefix, String lastPrefix) {
+        if (lastPrefix == null) {
+            return basePrefix;
+        }
+        return Stream.concat(basePrefix.stream(), Stream.of(lastPrefix))
+                .toList();
+    }
 }
