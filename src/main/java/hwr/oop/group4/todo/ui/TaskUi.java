@@ -11,9 +11,11 @@ import hwr.oop.group4.todo.ui.controller.menu.Menu;
 import hwr.oop.group4.todo.ui.controller.tables.ColumnConfig;
 import hwr.oop.group4.todo.ui.controller.tables.Table;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TaskUi {
@@ -34,9 +36,7 @@ public class TaskUi {
     }
 
     public void menu(Project project, List<String> prefixes) {
-        final List<String> modifiable = new ArrayList<>(prefixes);
-        modifiable.add("tasks");
-        menu(project.getTasks(), Collections.unmodifiableList(modifiable));
+        menu(project.getTasks(), consoleHelper.addPrefix(prefixes, "tasks"));
     }
 
     private void menu(Set<Task> tasks, List<String> prefixes) {
@@ -176,13 +176,12 @@ public class TaskUi {
     }
 
     private void remove(Collection<CommandArgument> args) {
-        final List<String> removePrefix = new ArrayList<>(prefixes);
-        removePrefix.add("remove");
-        removePrefix.add(consoleHelper.getStringParameter(args, "id").orElse("?"));
+        final List<String> basePrefix = consoleHelper.addPrefix(prefixes, "remove",
+                        consoleHelper.getStringParameter(args, "id").orElse("?"));
 
         final Task task = tasks.stream().toList().get(consoleHelper.getId(args, tasks.size()));
         final String confirmation = "Do you really want to remove " + task.getName() + "?";
-        if (consoleController.inputBool(removePrefix, confirmation, false)) {
+        if (consoleController.inputBool(basePrefix, confirmation, false)) {
             tasks.remove(task);
         }
     }
