@@ -248,20 +248,27 @@ class ConsoleUserInterfaceTest {
 
     @Test
     void canOpenCalendarMenu() {
-        InputStream inputStream = createInputStreamForInput(System.lineSeparator() + "calendar" + System.lineSeparator() +
-                "quit" + System.lineSeparator()
-        );
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "calendar" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
+                "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
         ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
-
-        assertThat(output).isEqualTo(
-                loadMenuOutput +
-                        mainMenuOutput +
-                        mainMenuOutput
+        assertThat(output).contains(loadMenuOutput +
+                mainMenuOutput +
+                "[1m<==== Calendar Menu ====>[0m" + System.lineSeparator() +
+                System.lineSeparator() +
+                "Commands: " + System.lineSeparator() +
+                "  today" + System.lineSeparator() +
+                "  nextWeek" + System.lineSeparator() +
+                "  lastWeek" + System.lineSeparator() +
+                "  back" + System.lineSeparator() +
+                "    Return to the previous menu" + System.lineSeparator() +
+                System.lineSeparator()
         );
     }
 
