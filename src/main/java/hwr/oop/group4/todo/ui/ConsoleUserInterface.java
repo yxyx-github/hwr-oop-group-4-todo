@@ -6,7 +6,6 @@ import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.TodoListCreationUseCase;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
-import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
 import hwr.oop.group4.todo.ui.controller.command.Command;
 import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
 import hwr.oop.group4.todo.ui.controller.menu.Entry;
@@ -67,7 +66,7 @@ public class ConsoleUserInterface {
                     new Command("intray",   args -> intrayUi.menu(todoList)),
                     new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
-                    new Command("calendar", args -> args -> calendarUi.menu(todoList)),
+                    new Command("calendar", args -> calendarUi.menu(todoList)),
                     new Command("new", this::create),
                     new Command("load",     this::load),
                     new Command("save",     this::save),

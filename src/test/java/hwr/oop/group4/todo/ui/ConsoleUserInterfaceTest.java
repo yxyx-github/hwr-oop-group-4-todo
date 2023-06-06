@@ -2,15 +2,11 @@ package hwr.oop.group4.todo.ui;
 
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
-import hwr.oop.group4.todo.core.api.adapter.PersistenceAdapter;
 import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
