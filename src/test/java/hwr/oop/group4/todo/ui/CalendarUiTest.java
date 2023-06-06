@@ -10,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -81,15 +80,15 @@ class CalendarUiTest {
         todoList.addProject(new Project.ProjectBuilder()
                 .name("TestProject")
                 .description("Bla")
-                .begin(LocalDateTime.of(monday.getYear(), monday.getMonth(), monday.getDayOfMonth(), 8, 45))
-                .end(LocalDateTime.of(monday.getYear(), monday.plusDays(3).getMonth(), monday.plusDays(3).getDayOfMonth(), 12, 15))
+                .begin(monday.atTime(8, 45))
+                .end(monday.plusDays(3).atTime(12, 15))
                 .build());
 
         todoList.addProject(new Project.ProjectBuilder()
                 .name("ICE")
                 .description("2nd Gen")
-                .begin(LocalDateTime.of(monday.getYear(), monday.minusDays(2).getMonth(), monday.minusDays(2).getDayOfMonth(), 5, 45))
-                .end(LocalDateTime.of(monday.getYear(), monday.plusDays(9).getMonth(), monday.plusDays(9).getDayOfMonth(), 0, 1))
+                .begin(monday.minusDays(2).atTime(5, 45))
+                .end(monday.plusDays(9).atTime(0, 1))
                 .build());
 
         return todoList;
