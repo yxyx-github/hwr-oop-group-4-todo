@@ -147,4 +147,13 @@ class ConsoleHelperTest {
         assertThat(consoleHelper.addPrefix(unmodifiableBase, null))
                 .isEqualTo(List.of("main", "prefix", "base"));
     }
+
+    @Test
+    void addMultiplePrefixes() {
+        final ConsoleHelper consoleHelper = new ConsoleHelper();
+        final List<String> unmodifiableBase = List.of("main", "prefix", "base");
+
+        assertThat(consoleHelper.addPrefix(unmodifiableBase, "first", "second"))
+                .isEqualTo(List.of("main", "prefix", "base", "first", "second"));
+    }
 }
