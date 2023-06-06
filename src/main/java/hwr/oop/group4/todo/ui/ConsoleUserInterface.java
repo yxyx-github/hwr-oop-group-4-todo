@@ -17,7 +17,7 @@ public class ConsoleUserInterface {
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
     private final TaskUi taskUi;
-    private final SomeDayMaybeUi someDayUi;
+    private final SomeDayMaybeUi someDayMaybeUi;
     private TodoList todoList;
 
     public ConsoleUserInterface(ConsoleController consoleController) {
@@ -25,7 +25,7 @@ public class ConsoleUserInterface {
         projectUi = new ProjectUi(this.consoleController);
         intrayUi = new IntrayUi(this.consoleController);
         taskUi = new TaskUi(this.consoleController);
-        someDayUi = new SomeDayMaybeUi(this.consoleController);
+        someDayMaybeUi = new SomeDayMaybeUi(this.consoleController);
         load(null);
     }
 
@@ -50,7 +50,7 @@ public class ConsoleUserInterface {
                     new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> {}),
-                    new Command("someday", args -> someDayUi.menu(todoList)),
+                    new Command("someday", args -> someDayMaybeUi.menu(todoList)),
                     new Command("load",     this::load),
                     new Command("save",     this::save),
                     new Command("quit",     args -> shouldReturn.set(true))

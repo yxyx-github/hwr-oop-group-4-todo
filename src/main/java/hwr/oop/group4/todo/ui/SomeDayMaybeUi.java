@@ -47,12 +47,13 @@ public class SomeDayMaybeUi {
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
+            listSomeDayMaybe(null);
             final int size = todoList.getMaybeList().size();
             consoleController.inputOptions(List.of("someDayMaybe"), List.of(
                     new Command("list", this::listSomeDayMaybe),
                     new Command("new", this::newSomeDayMaybe),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeSomeDayMaybe)),
-                    new Command("move to projects", args -> consoleController.callWithValidId(true, size, args, this::moveToProjects)),
+                    new Command("move", args -> consoleController.callWithValidId(true, size, args, this::moveToProjects)),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -78,7 +79,6 @@ public class SomeDayMaybeUi {
     }
 
     private void newSomeDayMaybe(Collection<CommandArgument> args) {
-        //need non blank name
         String name = consoleController.input(List.of("project", "new", "name")).orElseThrow();
         String desc = consoleController.input(List.of("project", "new", "description")).orElseThrow();
 

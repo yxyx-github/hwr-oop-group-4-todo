@@ -265,4 +265,44 @@ class ConsoleUserInterfaceTest {
         );
     }
 
+    @Test
+    void canOpenSomeDayMaybe() {
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "someday" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                loadMenuOutput +
+                        mainMenuOutput +
+                        "[1m<==== SomeDayMaybe List ====>[0m" + System.lineSeparator() +
+                        "Manage your list of tasks you want to take care of!" + System.lineSeparator() +
+                        System.lineSeparator() +
+                        "Commands: " + System.lineSeparator() +
+                        "  list" + System.lineSeparator() +
+                        "  new" + System.lineSeparator() +
+                        "    Add something to the list." + System.lineSeparator() +
+                        "  remove" + System.lineSeparator() +
+                        "    Remove it from the list." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the list to be removed." + System.lineSeparator() +
+                        "  move" + System.lineSeparator() +
+                        "    Move it to projects." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the list to be used." + System.lineSeparator() +
+                        "  back" + System.lineSeparator() +
+                        "    Returns to the previous menu." + System.lineSeparator() +
+                        "| ID | Name            | Description     |" + System.lineSeparator() +
+                        "==========================================" + System.lineSeparator() +
+                        "someDayMaybe:> " +
+                        mainMenuOutput
+        );
+    }
 }
