@@ -34,12 +34,12 @@ public class SomeDayMaybeUi {
         Menu menu = new Menu("SomeDayMaybe List",
                 "Manage your list of tasks you want to take care of!", List.of(
                 new Entry("list", ""),
-                new Entry("new", "add something to the list"),
-                new Entry("remove", "remove it from the list", List.of(
-                        new EntryArgument("id <id>", "ID of the project to be removed.")
+                new Entry("new", "Add something to the list."),
+                new Entry("remove", "Remove it from the list.", List.of(
+                        new EntryArgument("id <id>", "ID of the list to be removed.")
                 )),
-                new Entry("move to projects", "push your work to projects.", List.of(
-                        new EntryArgument("id <id>", "ID of the List to be used.")
+                new Entry("move", "Move it to projects.", List.of(
+                        new EntryArgument("id <id>", "ID of the list to be used.")
                 )),
                 new Entry("back", "Returns to the previous menu.")
         ));
@@ -47,9 +47,8 @@ public class SomeDayMaybeUi {
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
-            listSomeDayMaybe(null);
             final int size = todoList.getMaybeList().size();
-            consoleController.inputOptions(List.of("someday"), List.of(
+            consoleController.inputOptions(List.of("someDayMaybe"), List.of(
                     new Command("list", this::listSomeDayMaybe),
                     new Command("new", this::newSomeDayMaybe),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeSomeDayMaybe)),

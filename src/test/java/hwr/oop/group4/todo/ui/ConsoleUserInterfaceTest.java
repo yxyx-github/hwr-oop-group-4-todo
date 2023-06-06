@@ -25,6 +25,7 @@ class ConsoleUserInterfaceTest {
                     "  tasks" + System.lineSeparator() +
                     "  projects" + System.lineSeparator() +
                     "  calendar" + System.lineSeparator() +
+                    "  someday" + System.lineSeparator() +
                     "  load" + System.lineSeparator() +
                     "  save" + System.lineSeparator() +
                     "  quit" + System.lineSeparator() +
