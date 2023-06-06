@@ -6,6 +6,7 @@ import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.TodoListCreationUseCase;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
+import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
 import hwr.oop.group4.todo.ui.controller.command.Command;
 import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
 import hwr.oop.group4.todo.ui.controller.menu.Entry;
@@ -20,14 +21,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConsoleUserInterface {
 
-    final PersistenceFileUseCase persistenceAdapter;
-    final TodoListCreationUseCase creationAdapter;
+    private final PersistenceFileUseCase persistenceAdapter;
+    private final TodoListCreationUseCase creationAdapter;
 
     private final ConsoleController consoleController;
     private final ConsoleHelper consoleHelper;
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
     private final TaskUi taskUi;
+    private final CalendarUi calendarUi;
     private TodoList todoList;
 
     public ConsoleUserInterface(ConsoleController consoleController, PersistenceFileUseCase persistenceAdapter,
@@ -36,6 +38,7 @@ public class ConsoleUserInterface {
         this.consoleHelper = new ConsoleHelper();
         projectUi = new ProjectUi(consoleController);
         intrayUi = new IntrayUi(consoleController);
+        calendarUi = new CalendarUi(consoleController);
         taskUi = new TaskUi(consoleController);
         this.persistenceAdapter = persistenceAdapter;
         this.creationAdapter = creationAdapter;
@@ -64,11 +67,11 @@ public class ConsoleUserInterface {
                     new Command("intray",   args -> intrayUi.menu(todoList)),
                     new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
-                    new Command("calendar", args -> {}),
+                    new Command("calendar", args -> args -> calendarUi.menu(todoList)),
                     new Command("new", this::create),
-                    new Command("load", this::load),
-                    new Command("save", this::save),
-                    new Command("quit", args -> shouldReturn.set(true))
+                    new Command("load",     this::load),
+                    new Command("save",     this::save),
+                    new Command("quit",     args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
     }

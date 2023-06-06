@@ -7,7 +7,10 @@ import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -312,9 +315,10 @@ class ConsoleUserInterfaceTest {
 
     @Test
     void canOpenCalendarMenu() {
-        InputStream inputStream = createInputStreamForInput(System.lineSeparator() + "calendar" + System.lineSeparator() +
-                "quit" + System.lineSeparator()
-        );
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "calendar" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
+                "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
         ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
@@ -322,11 +326,17 @@ class ConsoleUserInterfaceTest {
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
-
-        assertThat(output).isEqualTo(
-        initMenuOutput +
+        assertThat(output).contains(initMenuOutput +
                 mainMenuOutput +
-                mainMenuOutput
+                "[1m<==== Calendar Menu ====>[0m" + System.lineSeparator() +
+                System.lineSeparator() +
+                "Commands: " + System.lineSeparator() +
+                "  today" + System.lineSeparator() +
+                "  nextWeek" + System.lineSeparator() +
+                "  lastWeek" + System.lineSeparator() +
+                "  back" + System.lineSeparator() +
+                "    Return to the previous menu" + System.lineSeparator() +
+                System.lineSeparator()
         );
     }
 
