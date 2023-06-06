@@ -31,14 +31,16 @@ public class SomeDayMaybeUi {
     public void menu(TodoList todoList) {
         this.todoList = todoList;
 
-        Menu menu = new Menu("SomeDayMaybe List", "Manage your projects which you might take care of!",
-                List.of(
+        Menu menu = new Menu("SomeDayMaybe List",
+                "Manage your list of tasks you want to take care of!", List.of(
                 new Entry("list", ""),
                 new Entry("new", "add something to the list"),
                 new Entry("remove", "remove it from the list", List.of(
                         new EntryArgument("id <id>", "ID of the project to be removed.")
                 )),
-                new Entry("move to projects", "push your work to projects."),
+                new Entry("move to projects", "push your work to projects.", List.of(
+                        new EntryArgument("id <id>", "ID of the List to be used.")
+                )),
                 new Entry("back", "Returns to the previous menu.")
         ));
         consoleController.output(menu.toString());
@@ -51,7 +53,7 @@ public class SomeDayMaybeUi {
                     new Command("list", this::listSomeDayMaybe),
                     new Command("new", this::newSomeDayMaybe),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeSomeDayMaybe)),
-                    new Command("move to projects", args -> {}),
+                    new Command("move to projects", args -> consoleController.callWithValidId(true, size, args, this::moveToProjects)),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -77,6 +79,7 @@ public class SomeDayMaybeUi {
     }
 
     private void newSomeDayMaybe(Collection<CommandArgument> args) {
+        //need non blank name
         String name = consoleController.input(List.of("project", "new", "name")).orElseThrow();
         String desc = consoleController.input(List.of("project", "new", "description")).orElseThrow();
 
@@ -99,6 +102,18 @@ public class SomeDayMaybeUi {
         }
     }
     private void moveToProjects(Collection<CommandArgument> args) {
+        final int id = consoleHelper.getId(args, todoList.getMaybeList().stream().toList().size());
+        final Project someDayMaybe = todoList.getMaybeList().stream().toList().get(id);
+        LocalDateTime begin = consoleController.inputDate(List.of("projects", "new", "begin"));
+        LocalDateTime end = consoleController.inputDate(List.of("projects", "new", "end"));
 
+        Project someProject = new Project.ProjectBuilder()
+                .name(todoList.getMaybeList().get(id).getName())
+                .description(todoList.getMaybeList().get(id).getDescription())
+                .begin(begin)
+                .end(end)
+                .build();
+        todoList.addProject(someProject);
+        todoList.removeSomedayMaybeProject(someDayMaybe);
     }
 }
