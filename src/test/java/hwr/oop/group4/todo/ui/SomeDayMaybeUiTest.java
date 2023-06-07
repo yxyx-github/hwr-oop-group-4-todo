@@ -37,8 +37,6 @@ public class SomeDayMaybeUiTest {
     private final String listHeader =
             "| ID | Name            | Description     |" + System.lineSeparator() +
             "==========================================" + System.lineSeparator();
-            //"|  0 |     TestProject |             Bla |" + System.lineSeparator() +
-            //"|  1 |             God |             2nd |" + System.lineSeparator()
 
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();
@@ -161,12 +159,12 @@ public class SomeDayMaybeUiTest {
                 "20.12.2003" + System.lineSeparator() +
                 "back" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
-
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+
+        final TodoList todoList = getExampleTodoList(true);
+        ui.menu(todoList);
 
         String output = retrieveResultFrom(outputStream);
-
         assertThat(output).isEqualTo(
                 someDayMaybeMenuOutput +
                 listHeader +
@@ -181,63 +179,8 @@ public class SomeDayMaybeUiTest {
                 "|  0 |             God |             2nd |" + System.lineSeparator() +
                 "someDayMaybe:> "
         );
-    }
-    private final String projectsMenuOutput =
-            "[1m<==== Project Menu ====>[0m" + System.lineSeparator() +
-            "Manage your Projects!" + System.lineSeparator() +
-            System.lineSeparator() +
-            "Commands: " + System.lineSeparator() +
-            "  list" + System.lineSeparator() +
-            "    List all projects." + System.lineSeparator() +
-            "  new" + System.lineSeparator() +
-            "    Add a new project." + System.lineSeparator() +
-            "  tasks" + System.lineSeparator() +
-            "    Open the task menu for a project." + System.lineSeparator() +
-            "    -id <id>" + System.lineSeparator() +
-            "      ID of the project." + System.lineSeparator() +
-            "  edit" + System.lineSeparator() +
-            "    Edit the attributes of a project." + System.lineSeparator() +
-            "    -id <id>" + System.lineSeparator() +
-            "      ID of the project to be edited." + System.lineSeparator() +
-            "    -name <name>" + System.lineSeparator() +
-            "      Change the name of the project." + System.lineSeparator() +
-            "    -desc <desc>" + System.lineSeparator() +
-            "      Change the description of the project." + System.lineSeparator() +
-            "    -begin" + System.lineSeparator() +
-            "      Change the beginning of the project." + System.lineSeparator() +
-            "    -end" + System.lineSeparator() +
-            "      Change the end of the project" + System.lineSeparator() +
-            "    -addTags <tag> [<tag> ...]" + System.lineSeparator() +
-            "      Add a new tag." + System.lineSeparator() +
-            "    -removeTags <tag> [<tag> ...]" + System.lineSeparator() +
-            "      Remove a tag." + System.lineSeparator() +
-            "  remove" + System.lineSeparator() +
-            "    Remove a project." + System.lineSeparator() +
-            "    -id <id>" + System.lineSeparator() +
-            "      ID of the project to be removed." + System.lineSeparator() +
-            "  back" + System.lineSeparator() +
-            "    Returns to the previous menu." + System.lineSeparator() +
-            "projects:> ";
-
-    @Test
-    void showProjectList() {
-        InputStream inputStream = createInputStreamForInput(
-                "" + System.lineSeparator() +
-                "back" + System.lineSeparator()
-        );
-        OutputStream outputStream = new ByteArrayOutputStream();
-
-        ProjectUi ui = new ProjectUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
-
-        String output = retrieveResultFrom(outputStream);
-
-        assertThat(output).isEqualTo(
-                "| ID | Name            | Description                    | Tags       | Begin  | End    |" + System.lineSeparator() +
-                "========================================================================================" + System.lineSeparator() +
-                projectsMenuOutput +
-                "projects:> "
-        );
+        assertThat(todoList.getMaybeList().size()).isEqualTo(1);
+        assertThat(todoList.getProjects().size()).isEqualTo(1);
     }
 
     @Test
