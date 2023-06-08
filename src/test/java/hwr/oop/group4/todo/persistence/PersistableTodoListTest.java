@@ -58,16 +58,4 @@ class PersistableTodoListTest {
                 // TODO: use todolist.json
                 .isEqualTo("{\"projects\":[{\"name\":\"project a\",\"description\":\"\",\"tags\":[],\"tasks\":[{\"name\":\"task c\",\"description\":\"description c\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"},{\"name\":\"task b\",\"description\":\"description b\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"}]}],\"inTray\":[{\"name\":\"idea a\",\"description\":\"description a\"},{\"name\":\"idea b\",\"description\":\"description b\"}],\"loseTasks\":[{\"name\":\"task a\",\"description\":\"description a\",\"priority\":0,\"deadline\":1063004940000,\"tags\":[{\"name\":\"tagA\"},{\"name\":\"tagB\"}],\"status\":\"OPEN\"}],\"somedayMaybe\":[]}");
     }
-
-    @Test
-    void canImportFromString() {
-        String jsonString = "{\"maybeList\":[],\"projects\":[{\"name\":\"project a\",\"description\":\"\",\"tasks\":[{\"name\":\"task c\",\"description\":\"description c\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"},{\"name\":\"task b\",\"description\":\"description b\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"}],\"tags\":[]}],\"inTray\":[{},{}],\"loseTasks\":[{\"name\":\"task a\",\"description\":\"description a\",\"priority\":0,\"tags\":[{},{}],\"status\":\"OPEN\"}]}";
-
-        PersistableTodoList persistableTodoList = new PersistableTodoList(new TodoList());
-        persistableTodoList.importFromString(jsonString);
-
-        System.out.println(persistableTodoList.getTodoList());
-
-        // assertThat(persistableTodoList.getTodoList()).isEqualTo(null);
-    }
 }
