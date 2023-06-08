@@ -31,6 +31,8 @@ class SomeDayMaybeUiTest {
             "    Move it to projects." + System.lineSeparator() +
             "    -id <id>" + System.lineSeparator() +
             "      ID of the list to be used." + System.lineSeparator() +
+            "  help" + System.lineSeparator() +
+            "    Print this information." + System.lineSeparator() +
             "  back" + System.lineSeparator() +
             "    Returns to the previous menu." + System.lineSeparator();
 
