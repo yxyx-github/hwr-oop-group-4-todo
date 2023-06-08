@@ -30,20 +30,7 @@ public class SomeDayMaybeUi {
 
     public void menu(TodoList todoList) {
         this.todoList = todoList;
-
-        Menu menu = new Menu("SomeDayMaybe List",
-                "Manage your list of tasks you want to take care of!", List.of(
-                new Entry("list", ""),
-                new Entry("new", "Add something to the list."),
-                new Entry("remove", "Remove it from the list.", List.of(
-                        new EntryArgument("id <id>", "ID of the list to be removed.")
-                )),
-                new Entry("move", "Move it to projects.", List.of(
-                        new EntryArgument("id <id>", "ID of the list to be used.")
-                )),
-                new Entry("back", "Returns to the previous menu.")
-        ));
-        consoleController.output(menu.toString());
+        showHelp(null);
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
@@ -54,6 +41,7 @@ public class SomeDayMaybeUi {
                     new Command("new", this::newSomeDayMaybe),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeSomeDayMaybe)),
                     new Command("move", args -> consoleController.callWithValidId(true, size, args, this::moveToProjects)),
+                    new Command("help", this::showHelp),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -115,4 +103,22 @@ public class SomeDayMaybeUi {
         todoList.addProject(someProject);
         todoList.removeSomedayMaybeProject(someDayMaybe);
     }
+
+    private void showHelp(Collection<CommandArgument> args) {
+        Menu menu = new Menu("SomeDayMaybe List",
+                "Manage your list of tasks you want to take care of!", List.of(
+                new Entry("list",   ""),
+                new Entry("new",    "Add something to the list."),
+                new Entry("remove", "Remove it from the list.", List.of(
+                        new EntryArgument("id <id>", "ID of the list to be removed.")
+                )),
+                new Entry("move",   "Move it to projects.", List.of(
+                        new EntryArgument("id <id>", "ID of the list to be used.")
+                )),
+                new Entry("help",   "Print this information."),
+                new Entry("back",   "Returns to the previous menu.")
+        ));
+        consoleController.output(menu.toString());
+    }
+
 }
