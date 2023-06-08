@@ -3,6 +3,7 @@ package hwr.oop.group4.todo.core;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class Project {
@@ -109,5 +110,18 @@ public class Project {
         public Project build() {
             return new Project(name, description, tags, tasks, begin, end);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(name, project.name) && Objects.equals(description, project.description) && Objects.equals(tags, project.tags) && Objects.equals(tasks, project.tasks) && Objects.equals(begin, project.begin) && Objects.equals(end, project.end);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, tags, tasks, begin, end);
     }
 }

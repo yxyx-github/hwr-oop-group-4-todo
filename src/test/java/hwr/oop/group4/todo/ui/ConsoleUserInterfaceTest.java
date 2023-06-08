@@ -312,7 +312,7 @@ class ConsoleUserInterfaceTest {
                         "    Returns to the previous menu." + System.lineSeparator() +
                         "| ID | Name            | Description     |" + System.lineSeparator() +
                         "==========================================" + System.lineSeparator() +
-                        "someDayMaybe:> " +
+                        "someday:> " +
                         "main:> "
         );
     }

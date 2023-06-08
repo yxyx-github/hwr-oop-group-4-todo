@@ -1,8 +1,8 @@
 package hwr.oop.group4.todo.persistence;
 
-import java.io.File;
+import hwr.oop.group4.todo.persistence.configuration.Configuration;
 
 public interface LoadPersistenceAdapter {
 
-    Persistable load(Persistable data, File file);
+    Persistable load(Persistable data, Configuration config);
 }

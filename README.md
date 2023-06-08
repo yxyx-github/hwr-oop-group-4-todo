@@ -6,9 +6,18 @@ This repository contains a student project created for an ongoing lecture on obj
 
 ## Abstract
 
-[TODO]: # (Write a short description of your project.)
-[TODO]: # (State most important features.)
 [TODO]: # (State the most interesting problems you encountered during the project.)
+This is a todolist to keep track of the tasks and projects you have currently running.
+It is able to create and manage tasks, ideas, projects and a somedaymaybe list with tags.
+Tasks and the somedaymaybe list can be converted to a project.
+Projects also can be managed with a calendar.
+The todolist is able to save and load from a file.
+
+What the list can't do:
+Review the closed and finished projects/tasks. So it is not capable of showing statistics of what you have already done
+
+With that being said, enjoy using our todolist.
+
 
 ## Feature List
 
@@ -26,7 +35,7 @@ This repository contains a student project created for an ongoing lecture on obj
 |   8    | :heavy_check_mark: | In Tray               | :heavy_check_mark: |
 |   9    |        :x:         | Time Allocation       |        :x:         |
 |   10   | :heavy_check_mark: | "Someday, Maybe" List | :heavy_check_mark: |
-|   11   |        :x:         | Weekly Planning       |        :x:         |
+|   11   | :heavy_check_mark: | Weekly Planning       | :heavy_check_mark: |
 |   12   |        :x:         | Weekly Review         |        :x:         |
 
 
@@ -50,5 +59,5 @@ This repository contains a student project created for an ongoing lecture on obj
 | Number | Dependency Name          | Dependency Description                   | Why is it necessary?                  |
 |--------|--------------------------|------------------------------------------|---------------------------------------|
 | 1      | org.mockito              | Mocking-Framework                        | Persistence tests                     |
-| 2      | org.json                 | Library to create and parse JSON strings | JSON is used as format in persistence |
+| 2      | com.google.code.gson     | Library to create and parse JSON strings | JSON is used as format in persistence |
 | 3      | net.javacrumbs.json-unit | Assertion library for JSON               | Simplifies tests handling JSON output |
