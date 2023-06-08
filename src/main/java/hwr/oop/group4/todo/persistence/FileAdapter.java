@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapter {
+public class FileAdapter<T> implements LoadPersistenceAdapter<T>, SavePersistenceAdapter<T> {
 
     private FileAdapterConfiguration getFileAdapterConfiguration(Configuration config) {
         if (config instanceof FileAdapterConfiguration) {
@@ -20,7 +20,7 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
     }
 
     @Override
-    public void save(Persistable data, Configuration config) {
+    public void save(Persistable<T> persistable, T data, Configuration config) {
         File file = getFileAdapterConfiguration(config).getFile()
                 .orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         try {
@@ -30,14 +30,14 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
         }
 
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write(data.exportAsString());
+            writer.write(persistable.exportAsString(data));
         } catch (IOException e) {
             throw new PersistenceRuntimeException("Cannot write file", e);
         }
     }
 
     @Override
-    public Persistable load(Persistable data, Configuration config) {
+    public T load(Persistable<T> persistable, Configuration config) {
         File file = getFileAdapterConfiguration(config).getFile()
                 .orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         StringBuilder output = new StringBuilder();
@@ -48,7 +48,7 @@ public class FileAdapter implements LoadPersistenceAdapter, SavePersistenceAdapt
         } catch (FileNotFoundException e) {
             throw new PersistenceRuntimeException("Cannot read file", e);
         }
-        data.importFromString(output.toString());
-        return data;
+
+        return persistable.importFromString(output.toString());
     }
 }

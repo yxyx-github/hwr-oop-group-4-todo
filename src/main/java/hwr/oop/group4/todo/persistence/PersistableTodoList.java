@@ -7,34 +7,22 @@ import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSeriali
 
 import java.time.LocalDateTime;
 
-public class PersistableTodoList implements Persistable {
-    private TodoList todoList;
-
-    public PersistableTodoList() {
-
-    }
-    public PersistableTodoList(TodoList todoList) {
-        this.todoList = todoList;
-    }
-
-    public TodoList getTodoList() {
-        return todoList;
-    }
+public class PersistableTodoList implements Persistable<TodoList> {
 
     @Override
-    public String exportAsString() {
+    public String exportAsString(TodoList data) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new DateTimeSerializer())
                 .create();
-        return gson.toJson(todoList);
+        return gson.toJson(data);
     }
 
     @Override
-    public void importFromString(String dataString) {
+    public TodoList importFromString(String dataString) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new DateTimeDeserializer())
                 .create();
 
-        todoList = gson.fromJson(dataString, TodoList.class);
+        return gson.fromJson(dataString, TodoList.class);
     }
 }

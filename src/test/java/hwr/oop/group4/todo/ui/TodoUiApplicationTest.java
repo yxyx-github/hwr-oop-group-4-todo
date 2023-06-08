@@ -51,6 +51,8 @@ class TodoUiApplicationTest {
                 "  save" + System.lineSeparator() +
                 "    -file" + System.lineSeparator() +
                 "      A path to the file." + System.lineSeparator() +
+                "  help" + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "  quit" + System.lineSeparator() +
                 "    Quit the program." + System.lineSeparator() +
                 "main:> "

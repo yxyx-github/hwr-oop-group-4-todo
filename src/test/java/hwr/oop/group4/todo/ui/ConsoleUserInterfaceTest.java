@@ -34,6 +34,8 @@ class ConsoleUserInterfaceTest {
             "  save" + System.lineSeparator() +
             "    -file" + System.lineSeparator() +
             "      A path to the file." + System.lineSeparator() +
+            "  help" + System.lineSeparator() +
+            "    Print this information." + System.lineSeparator() +
             "  quit" + System.lineSeparator() +
             "    Quit the program." + System.lineSeparator() +
             "main:> ";
@@ -72,10 +74,12 @@ class ConsoleUserInterfaceTest {
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(
-        initMenuOutput +
-                mainMenuOutput +
-                mainMenuOutput
+                initMenuOutput +
+                        mainMenuOutput +
+                        initMenuOutput +
+                        "main:> "
         );
+
     }
 
     @Test
@@ -150,7 +154,7 @@ class ConsoleUserInterfaceTest {
                 "projects" + System.lineSeparator() + "back" + System.lineSeparator() + "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream), dummyAdapter, new TodoListCreationAdapter());
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -209,8 +213,7 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
-                dummyAdapter, new TodoListCreationAdapter());
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -308,7 +311,7 @@ class ConsoleUserInterfaceTest {
                         "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                         "=========================================================================================================" + System.lineSeparator() +
                         "tasks:> " +
-                        mainMenuOutput
+                        "main:> "
                 );
     }
 
@@ -377,7 +380,7 @@ class ConsoleUserInterfaceTest {
                         "| ID | Name            | Description     |" + System.lineSeparator() +
                         "==========================================" + System.lineSeparator() +
                         "someday:> " +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 }
