@@ -137,6 +137,7 @@ public class ConsoleUserInterface {
                         List.of(new EntryArgument("file", "A path to the file."))),
                 new Entry("save",     "",
                         List.of(new EntryArgument("file", "A path to the file."))),
+                new Entry("help",     "Print this information."),
                 new Entry("quit",     "Quit the program.")
         ));
         consoleController.output(menu.toString());

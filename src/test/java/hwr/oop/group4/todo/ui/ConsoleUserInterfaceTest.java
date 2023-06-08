@@ -76,7 +76,6 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
                 initMenuOutput +
                         mainMenuOutput +
-                        initMenuOutput +
                         "main:> "
         );
 
@@ -123,7 +122,7 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
         initMenuOutput +
                 mainMenuOutput +
-                mainMenuOutput
+                "main:> "
         );
     }
 
@@ -144,7 +143,7 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
                 initMenuOutput +
                         mainMenuOutput +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 
@@ -154,7 +153,8 @@ class ConsoleUserInterfaceTest {
                 "projects" + System.lineSeparator() + "back" + System.lineSeparator() + "quit" + System.lineSeparator());
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -162,7 +162,7 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
         initMenuOutput +
                 mainMenuOutput +
-                mainMenuOutput +
+                "main:> " +
                 "| ID | Name            | Description                    | Tags       | Begin  | End    |" + System.lineSeparator() +
                 "========================================================================================" + System.lineSeparator() +
                 "[1m<==== Project Menu ====>[0m" + System.lineSeparator() +
@@ -197,10 +197,12 @@ class ConsoleUserInterfaceTest {
                 "    Remove a project." + System.lineSeparator() +
                 "    -id <id>" + System.lineSeparator() +
                 "      ID of the project to be removed." + System.lineSeparator() +
+                "  help" + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "  back" + System.lineSeparator() +
                 "    Returns to the previous menu." + System.lineSeparator() +
                 "projects:> " +
-                mainMenuOutput
+                "main:> "
         );
     }
 
@@ -213,7 +215,7 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream), dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
@@ -239,10 +241,12 @@ class ConsoleUserInterfaceTest {
                 "    Create a task from an idea" + System.lineSeparator() +
                 "    -id <id>" + System.lineSeparator() +
                 "      ID of the idea to be used." + System.lineSeparator() +
+                "  help" + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "  back" + System.lineSeparator() +
                 "    Return to the previous menu." + System.lineSeparator() +
                 "intray:> " +
-                mainMenuOutput
+                "main:> "
         );
     }
 
@@ -304,10 +308,10 @@ class ConsoleUserInterfaceTest {
                         "    Reopens a task." + System.lineSeparator() +
                         "    -id <id>" + System.lineSeparator() +
                         "      ID of the task which is to be set to open." + System.lineSeparator() +
+                        "  help" + System.lineSeparator() +
+                        "    Print this information." + System.lineSeparator() +
                         "  back" + System.lineSeparator() +
                         "    Returns to the previous menu." + System.lineSeparator() +
-                        "  help" + System.lineSeparator() +
-                        "    Prints this Menu again." + System.lineSeparator() +
                         "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                         "=========================================================================================================" + System.lineSeparator() +
                         "tasks:> " +
