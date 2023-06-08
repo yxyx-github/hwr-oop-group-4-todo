@@ -25,6 +25,8 @@ class CalendarUiTest {
                     "  today" + System.lineSeparator() +
                     "  nextWeek" + System.lineSeparator() +
                     "  lastWeek" + System.lineSeparator() +
+                    "  help" + System.lineSeparator() +
+                    "    Print this information." + System.lineSeparator() +
                     "  back" + System.lineSeparator() +
                     "    Return to the previous menu" + System.lineSeparator() +
                     System.lineSeparator();
