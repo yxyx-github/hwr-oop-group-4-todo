@@ -6,7 +6,10 @@ import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -25,6 +28,7 @@ class ConsoleUserInterfaceTest {
             "  tasks" + System.lineSeparator() +
             "  projects" + System.lineSeparator() +
             "  calendar" + System.lineSeparator() +
+            "  someday" + System.lineSeparator() +
             "  new" + System.lineSeparator() +
             "  load" + System.lineSeparator() +
             "    -file" + System.lineSeparator() +
@@ -336,4 +340,44 @@ class ConsoleUserInterfaceTest {
         );
     }
 
+    @Test
+    void canOpenSomeDayMaybe() {
+        InputStream inputStream = createInputStreamForInput(System.lineSeparator() +
+                "someday" + System.lineSeparator() +
+                "back" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "[1m<==== SomeDayMaybe List ====>[0m" + System.lineSeparator() +
+                        "Manage your list of tasks you want to take care of!" + System.lineSeparator() +
+                        System.lineSeparator() +
+                        "Commands: " + System.lineSeparator() +
+                        "  list" + System.lineSeparator() +
+                        "  new" + System.lineSeparator() +
+                        "    Add something to the list." + System.lineSeparator() +
+                        "  remove" + System.lineSeparator() +
+                        "    Remove it from the list." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the list to be removed." + System.lineSeparator() +
+                        "  move" + System.lineSeparator() +
+                        "    Move it to projects." + System.lineSeparator() +
+                        "    -id <id>" + System.lineSeparator() +
+                        "      ID of the list to be used." + System.lineSeparator() +
+                        "  back" + System.lineSeparator() +
+                        "    Returns to the previous menu." + System.lineSeparator() +
+                        "| ID | Name            | Description     |" + System.lineSeparator() +
+                        "==========================================" + System.lineSeparator() +
+                        "someday:> " +
+                        mainMenuOutput
+        );
+    }
 }

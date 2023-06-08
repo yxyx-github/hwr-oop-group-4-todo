@@ -43,6 +43,7 @@ class TodoUiApplicationTest {
                 "  tasks" + System.lineSeparator() +
                 "  projects" + System.lineSeparator() +
                 "  calendar" + System.lineSeparator() +
+                "  someday" + System.lineSeparator() +
                 "  new" + System.lineSeparator() +
                 "  load" + System.lineSeparator() +
                 "    -file" + System.lineSeparator() +

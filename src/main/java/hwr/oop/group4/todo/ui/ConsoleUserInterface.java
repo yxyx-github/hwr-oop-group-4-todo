@@ -28,6 +28,7 @@ public class ConsoleUserInterface {
     private final ProjectUi projectUi;
     private final IntrayUi intrayUi;
     private final TaskUi taskUi;
+    private final SomeDayMaybeUi someDayMaybeUi;
     private final CalendarUi calendarUi;
     private TodoList todoList;
 
@@ -39,6 +40,7 @@ public class ConsoleUserInterface {
         intrayUi = new IntrayUi(consoleController);
         calendarUi = new CalendarUi(consoleController);
         taskUi = new TaskUi(consoleController);
+        someDayMaybeUi = new SomeDayMaybeUi(consoleController);
         this.persistenceAdapter = persistenceAdapter;
         this.creationAdapter = creationAdapter;
         initialiseTodoList();
@@ -50,6 +52,7 @@ public class ConsoleUserInterface {
                 new Entry("tasks",    ""),
                 new Entry("projects", ""),
                 new Entry("calendar", ""),
+                new Entry("someday", ""),
                 new Entry("new", ""),
                 new Entry("load",     "",
                         List.of(new EntryArgument("file", "A path to the file."))),
@@ -67,6 +70,7 @@ public class ConsoleUserInterface {
                     new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> calendarUi.menu(todoList)),
+                    new Command("someday", args -> someDayMaybeUi.menu(todoList)),
                     new Command("new", this::create),
                     new Command("load",     this::load),
                     new Command("save",     this::save),

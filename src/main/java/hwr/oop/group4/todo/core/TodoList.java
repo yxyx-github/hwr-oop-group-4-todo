@@ -1,9 +1,6 @@
 package hwr.oop.group4.todo.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TodoList {
 
@@ -61,4 +58,16 @@ public class TodoList {
         projects.remove(project);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TodoList todoList = (TodoList) o;
+        return Objects.equals(projects, todoList.projects) && Objects.equals(inTray, todoList.inTray) && Objects.equals(loseTasks, todoList.loseTasks) && Objects.equals(somedayMaybe, todoList.somedayMaybe);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(projects, inTray, loseTasks, somedayMaybe);
+    }
 }
