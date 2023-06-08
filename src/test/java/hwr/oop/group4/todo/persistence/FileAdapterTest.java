@@ -1,6 +1,7 @@
 package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
+import hwr.oop.group4.todo.persistence.configuration.Configuration;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,7 +25,7 @@ class FileAdapterTest {
 
         Path path = Path.of(tempDir.toString() + "/FileAdapterTest.save.txt");
         File file = new File(path.toUri());
-        FileAdapterConfiguration config = new FileAdapterConfiguration(file);
+        Configuration config = new FileAdapterConfiguration(file);
 
         SavePersistenceAdapter fileAdapter = new FileAdapter();
         fileAdapter.save(data, config);
@@ -34,13 +35,24 @@ class FileAdapterTest {
     }
 
     @Test
+    void saveWithWrongConfiguration(@TempDir Path tempDir) {
+        Persistable data = mock();
+
+        Configuration config = new Configuration() {};
+
+        SavePersistenceAdapter fileAdapter = new FileAdapter();
+
+        assertThatThrownBy(() -> fileAdapter.save(data, config)).isInstanceOf(PersistenceRuntimeException.class);
+    }
+
+    @Test
     void saveWithIOException() throws IOException {
         Persistable data = mock();
         when(data.exportAsString()).thenReturn("demo file content");
 
         File file = mock();
         when(file.createNewFile()).thenThrow(IOException.class);
-        FileAdapterConfiguration config = new FileAdapterConfiguration(file);
+        Configuration config = new FileAdapterConfiguration(file);
 
         SavePersistenceAdapter fileAdapter = new FileAdapter();
 
@@ -51,7 +63,7 @@ class FileAdapterTest {
     void saveWithEmptyFile() {
         Persistable data = mock();
 
-        FileAdapterConfiguration config = new FileAdapterConfiguration(null);
+        Configuration config = new FileAdapterConfiguration(null);
 
         SavePersistenceAdapter fileAdapter = new FileAdapter();
 
@@ -76,10 +88,21 @@ class FileAdapterTest {
     }
 
     @Test
+    void loadWithWrongConfiguration(@TempDir Path tempDir) throws IOException {
+        Persistable data = mock();
+
+        Configuration config = new Configuration() {};
+
+        LoadPersistenceAdapter fileAdapter = new FileAdapter();
+
+        assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
+    }
+
+    @Test
     void loadWithEmptyFile() {
         Persistable data = mock();
 
-        FileAdapterConfiguration config = new FileAdapterConfiguration(null);
+        Configuration config = new FileAdapterConfiguration(null);
 
         LoadPersistenceAdapter fileAdapter = new FileAdapter();
 
