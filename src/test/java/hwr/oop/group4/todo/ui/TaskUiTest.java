@@ -59,7 +59,7 @@ class TaskUiTest {
             "  back" + System.lineSeparator() +
             "    Returns to the previous menu." + System.lineSeparator() +
             "  help" + System.lineSeparator() +
-            "    Prints this Menu again.";
+            "    Print this information.";
 
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();

@@ -90,7 +90,7 @@ public class TaskUi {
                         new EntryArgument("id <id>", "ID of the task which is to be set to open.")
                 )),
                 new Entry("back", "Returns to the previous menu."),
-                new Entry("help", "Prints this Menu again.")
+                new Entry("help", "Print this information.")
         )).toString();
     }
 

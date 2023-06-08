@@ -331,7 +331,7 @@ class ProjectUiTest {
                 "  back" + System.lineSeparator() +
                 "    Returns to the previous menu." + System.lineSeparator() +
                 "  help" + System.lineSeparator() +
-                "    Prints this Menu again." + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                 "=========================================================================================================" + System.lineSeparator() +
                 "projects/0/tasks:> " +
