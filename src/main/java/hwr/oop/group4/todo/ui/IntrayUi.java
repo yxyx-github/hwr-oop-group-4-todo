@@ -33,18 +33,7 @@ public class IntrayUi {
         this.todoList = todoList;
         listItems(null);
 
-        Menu menu = new Menu("Intray Menu", "Manage your fleeting thoughts!", List.of(
-                new Entry("list", "List all ideas."),
-                new Entry("new", "Create a new idea."),
-                new Entry("remove", "Remove an idea", List.of(
-                        new EntryArgument("id <id>", "ID of the idea to be removed.")
-                )),
-                new Entry("task", "Create a task from an idea", List.of(
-                        new EntryArgument("id <id>", "ID of the idea to be used.")
-                )),
-                new Entry("back", "Return to the previous menu.")
-        ));
-        consoleController.output(menu.toString());
+        showHelp(null);
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
@@ -54,6 +43,7 @@ public class IntrayUi {
                     new Command("new", this::newItem),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeItem)),
                     new Command("task", args -> consoleController.callWithValidId(true, size, args, this::toTask)),
+                    new Command("help", this::showHelp),
                     new Command("back", args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -103,5 +93,19 @@ public class IntrayUi {
         todoList.addLoseTask(taskCreationUi.create(idea, List.of("intray", "task")));
         todoList.removeIdea(idea);
     }
-
+    private void showHelp(Collection<CommandArgument> args){
+        Menu menu = new Menu("Intray Menu", "Manage your fleeting thoughts!", List.of(
+                new Entry("list", "List all ideas."),
+                new Entry("new", "Create a new idea."),
+                new Entry("remove", "Remove an idea", List.of(
+                        new EntryArgument("id <id>", "ID of the idea to be removed.")
+                )),
+                new Entry("task", "Create a task from an idea", List.of(
+                        new EntryArgument("id <id>", "ID of the idea to be used.")
+                )),
+                new Entry("help", "Print this information."),
+                new Entry("back", "Return to the previous menu.")
+        ));
+        consoleController.output(menu.toString());
+    }
 }

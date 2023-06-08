@@ -171,6 +171,8 @@ class ConsoleUserInterfaceTest {
                         "    Create a task from an idea" + System.lineSeparator() +
                         "    -id <id>" + System.lineSeparator() +
                         "      ID of the idea to be used." + System.lineSeparator() +
+                        "  help" + System.lineSeparator() +
+                        "    Print this information." + System.lineSeparator() +
                         "  back" + System.lineSeparator() +
                         "    Return to the previous menu." + System.lineSeparator() +
                         "intray:> " +
