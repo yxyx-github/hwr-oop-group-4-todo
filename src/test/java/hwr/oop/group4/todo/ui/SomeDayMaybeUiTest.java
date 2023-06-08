@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class SomeDayMaybeUiTest {
+class SomeDayMaybeUiTest {
 
     private final String someDayMaybeMenuOutput =
             "[1m<==== SomeDayMaybe List ====>[0m" + System.lineSeparator() +
