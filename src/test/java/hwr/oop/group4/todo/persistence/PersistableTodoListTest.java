@@ -1,10 +1,14 @@
 package hwr.oop.group4.todo.persistence;
 
+import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.core.*;
 import net.javacrumbs.jsonunit.core.Option;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -53,6 +57,17 @@ class PersistableTodoListTest {
         return todoList;
     }
 
+    String getExampleJSON() {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("todolist.json");) {
+            if (input == null) {
+                return "";
+            }
+            return new String(input.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new PersistenceRuntimeException("Failed reading json example", e);
+        }
+    }
+
     @Test
     void canExportAsString() {
         TodoList todoList = getExampleTodoList();
@@ -61,13 +76,12 @@ class PersistableTodoListTest {
 
         assertThatJson(persistedTodoList.exportAsString())
                 .when(Option.IGNORING_ARRAY_ORDER)
-                // TODO: use todolist.json
-                .isEqualTo("{\"projects\":[{\"name\":\"project a\",\"description\":\"\",\"tags\":[],\"tasks\":[{\"name\":\"task c\",\"description\":\"description c\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"},{\"name\":\"task b\",\"description\":\"description b\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"}]}],\"inTray\":[{\"name\":\"idea a\",\"description\":\"description a\"},{\"name\":\"idea b\",\"description\":\"description b\"}],\"loseTasks\":[{\"name\":\"task a\",\"description\":\"description a\",\"priority\":0,\"deadline\":1063004940000,\"tags\":[{\"name\":\"tagA\"},{\"name\":\"tagB\"}],\"status\":\"OPEN\"}],\"somedayMaybe\":[]}");
+                .isEqualTo(getExampleJSON());
     }
 
     @Test
     void canImportFromString() {
-        String jsonString = "{\"projects\":[{\"name\":\"project a\",\"description\":\"\",\"tags\":[],\"tasks\":[{\"name\":\"task c\",\"description\":\"description c\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"},{\"name\":\"task b\",\"description\":\"description b\",\"priority\":0,\"tags\":[],\"status\":\"OPEN\"}]}],\"inTray\":[{\"name\":\"idea a\",\"description\":\"description a\"},{\"name\":\"idea b\",\"description\":\"description b\"}],\"loseTasks\":[{\"name\":\"task a\",\"description\":\"description a\",\"priority\":0,\"deadline\":1063004940000,\"tags\":[{\"name\":\"tagA\"},{\"name\":\"tagB\"}],\"status\":\"OPEN\"}],\"somedayMaybe\":[]}";
+        String jsonString = getExampleJSON();
 
         PersistableTodoList persistableTodoList = new PersistableTodoList(new TodoList());
         persistableTodoList.importFromString(jsonString);
