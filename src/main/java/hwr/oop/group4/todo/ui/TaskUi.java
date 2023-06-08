@@ -43,8 +43,9 @@ public class TaskUi {
         this.tasks = tasks;
         this.prefixes = prefixes;
 
-        consoleController.output(getMenu());
+        showHelp(null);
         list(null);
+
         final AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
             final int size = tasks.size();
@@ -57,16 +58,17 @@ public class TaskUi {
                     new Command("complete", args -> consoleController.callWithValidId(true, size, args, this::complete)),
                     new Command("inProgress", args -> consoleController.callWithValidId(true, size, args, this::progress)),
                     new Command("open", args -> consoleController.callWithValidId(true, size, args, this::open)),
+                    new Command("help", this::showHelp),
                     new Command("back", args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {
             }));
         }
     }
 
-    private String getMenu() {
-        return new Menu("Task Menu", "List and Edit your Tasks.", List.of(
+    private void showHelp(Collection<CommandArgument> args) {
+        Menu menu = new Menu("Task Menu", "List and Edit your Tasks.", List.of(
                 new Entry("list", "List all tasks."),
-                new Entry("new", "Create a new task."),
+                new Entry("new",  "Create a new task."),
                 new Entry("edit", "Edit the attributes of a project.", List.of(
                         new EntryArgument("id <id>", "ID of the task to be edited."),
                         new EntryArgument("name <name>", "Change the name of the task."),
@@ -89,9 +91,10 @@ public class TaskUi {
                 new Entry("open", "Reopens a task.", List.of(
                         new EntryArgument("id <id>", "ID of the task which is to be set to open.")
                 )),
-                new Entry("back", "Returns to the previous menu."),
-                new Entry("help", "Print this information.")
-        )).toString();
+                new Entry("help", "Print this information."),
+                new Entry("back", "Returns to the previous menu.")
+        ));
+        consoleController.output(menu.toString());
     }
 
 

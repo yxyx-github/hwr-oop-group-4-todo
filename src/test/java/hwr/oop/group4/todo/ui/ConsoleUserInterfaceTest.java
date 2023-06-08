@@ -241,10 +241,10 @@ class ConsoleUserInterfaceTest {
                         "    Reopens a task." + System.lineSeparator() +
                         "    -id <id>" + System.lineSeparator() +
                         "      ID of the task which is to be set to open." + System.lineSeparator() +
-                        "  back" + System.lineSeparator() +
-                        "    Returns to the previous menu." + System.lineSeparator() +
                         "  help" + System.lineSeparator() +
                         "    Print this information." + System.lineSeparator() +
+                        "  back" + System.lineSeparator() +
+                        "    Returns to the previous menu." + System.lineSeparator() +
                         "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                         "=========================================================================================================" + System.lineSeparator() +
                         "tasks:> " +
