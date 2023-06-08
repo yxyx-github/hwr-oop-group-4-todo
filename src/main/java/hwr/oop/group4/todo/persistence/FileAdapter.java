@@ -10,18 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class FileAdapter<T> implements LoadPersistenceAdapter<T>, SavePersistenceAdapter<T> {
-
-    private FileAdapterConfiguration getFileAdapterConfiguration(Configuration config) {
-        if (config instanceof FileAdapterConfiguration) {
-            return (FileAdapterConfiguration) config;
-        }
-        throw new PersistenceRuntimeException("Wrong config provided, should be FileAdapterConfiguration");
-    }
+public class FileAdapter<T> implements LoadPersistenceAdapter<T, FileAdapterConfiguration>, SavePersistenceAdapter<T, FileAdapterConfiguration> {
 
     @Override
-    public void save(Persistable<T> persistable, T data, Configuration config) {
-        File file = getFileAdapterConfiguration(config).getFile()
+    public void save(Persistable<T> persistable, T data, FileAdapterConfiguration config) {
+        File file = config.getFile()
                 .orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         try {
             file.createNewFile();
@@ -37,8 +30,8 @@ public class FileAdapter<T> implements LoadPersistenceAdapter<T>, SavePersistenc
     }
 
     @Override
-    public T load(Persistable<T> persistable, Configuration config) {
-        File file = getFileAdapterConfiguration(config).getFile()
+    public T load(Persistable<T> persistable, FileAdapterConfiguration config) {
+        File file = config.getFile()
                 .orElseThrow(() -> new PersistenceRuntimeException("No file provided"));
         StringBuilder output = new StringBuilder();
         try (Scanner scanner = new Scanner(file)) {

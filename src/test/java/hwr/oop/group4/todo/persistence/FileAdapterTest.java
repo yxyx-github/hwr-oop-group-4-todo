@@ -2,6 +2,7 @@ package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
+import hwr.oop.group4.todo.persistence.configuration.Configuration;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -29,7 +30,7 @@ class FileAdapterTest {
         File file = new File(path.toUri());
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
         fileAdapter.save(persistable, data, config);
 
         assertThat(Files.exists(path)).isTrue();
@@ -47,7 +48,7 @@ class FileAdapterTest {
         when(file.createNewFile()).thenThrow(IOException.class);
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(persistable, data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
@@ -60,14 +61,14 @@ class FileAdapterTest {
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(persistable, data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
     void load(@TempDir Path tempDir) throws IOException {
-        Persistable<TodoList> data = mock();
+        Persistable<String> persistable = mock();
 
         Path path = Path.of(tempDir.toString() + "/FileAdapterTest.load.txt");
         File file = new File(path.toUri());
@@ -76,10 +77,10 @@ class FileAdapterTest {
         writer.write("demo file content");
         writer.close();
 
-        LoadPersistenceAdapter<TodoList> fileAdapter = new FileAdapter<>();
-        fileAdapter.load(data, new FileAdapterConfiguration(file));
+        LoadPersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
+        fileAdapter.load(persistable, new FileAdapterConfiguration(file));
 
-        verify(data).importFromString("demo file content");
+        verify(persistable).importFromString("demo file content");
     }
 
     @Test
@@ -88,7 +89,7 @@ class FileAdapterTest {
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        LoadPersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
+        LoadPersistenceAdapter<PersistableTodoList, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }

@@ -9,11 +9,11 @@ import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 
 public class PersistenceAdapter implements PersistenceFileUseCase {
 
-    final LoadPersistenceAdapter<TodoList> loadAdapter;
-    final SavePersistenceAdapter<TodoList> saveAdapter;
+    final LoadPersistenceAdapter<TodoList, FileAdapterConfiguration> loadAdapter;
+    final SavePersistenceAdapter<TodoList, FileAdapterConfiguration> saveAdapter;
 
 
-    public PersistenceAdapter(LoadPersistenceAdapter<TodoList> loadAdapter, SavePersistenceAdapter<TodoList> saveAdapter) {
+    public PersistenceAdapter(LoadPersistenceAdapter<TodoList, FileAdapterConfiguration> loadAdapter, SavePersistenceAdapter<TodoList, FileAdapterConfiguration> saveAdapter) {
         this.loadAdapter = loadAdapter;
         this.saveAdapter = saveAdapter;
     }
