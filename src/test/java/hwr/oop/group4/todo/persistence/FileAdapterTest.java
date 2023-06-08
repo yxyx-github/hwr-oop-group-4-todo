@@ -30,24 +30,11 @@ class FileAdapterTest {
         File file = new File(path.toUri());
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
         fileAdapter.save(persistable, data, config);
 
         assertThat(Files.exists(path)).isTrue();
         assertThat(file).hasContent("demo file content");
-    }
-
-    @Test
-    void saveWithWrongConfiguration(@TempDir Path tempDir) {
-        String data = "demo file content";
-
-        Persistable<String> persistable = mock();
-
-        Configuration config = new Configuration() {};
-
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
-
-        assertThatThrownBy(() -> fileAdapter.save(persistable, data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
@@ -61,7 +48,7 @@ class FileAdapterTest {
         when(file.createNewFile()).thenThrow(IOException.class);
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(persistable, data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
@@ -74,7 +61,7 @@ class FileAdapterTest {
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        SavePersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(persistable, data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
@@ -90,21 +77,10 @@ class FileAdapterTest {
         writer.write("demo file content");
         writer.close();
 
-        LoadPersistenceAdapter<String> fileAdapter = new FileAdapter<>();
+        LoadPersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
         fileAdapter.load(persistable, new FileAdapterConfiguration(file));
 
         verify(persistable).importFromString("demo file content");
-    }
-
-    @Test
-    void loadWithWrongConfiguration(@TempDir Path tempDir) throws IOException {
-        Persistable<String> data = mock();
-
-        Configuration config = new Configuration() {};
-
-        LoadPersistenceAdapter<String> fileAdapter = new FileAdapter<>();
-
-        assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
@@ -113,7 +89,7 @@ class FileAdapterTest {
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        LoadPersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
+        LoadPersistenceAdapter<PersistableTodoList, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
