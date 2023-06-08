@@ -1,8 +1,8 @@
 package hwr.oop.group4.todo.persistence;
 
-import java.io.File;
+import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 
 public interface SavePersistenceAdapter {
 
-    void save(Persistable data, File file);
+    void save(Persistable data, FileAdapterConfiguration config);
 }
