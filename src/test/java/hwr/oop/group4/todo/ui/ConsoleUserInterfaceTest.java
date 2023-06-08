@@ -28,6 +28,8 @@ class ConsoleUserInterfaceTest {
                     "  someday" + System.lineSeparator() +
                     "  load" + System.lineSeparator() +
                     "  save" + System.lineSeparator() +
+                    "  help" + System.lineSeparator() +
+                    "    Print this information." + System.lineSeparator() +
                     "  quit" + System.lineSeparator() +
                     "    Quit the program." + System.lineSeparator() +
                     "main:> ";
@@ -55,7 +57,7 @@ class ConsoleUserInterfaceTest {
                 loadMenuOutput +
                         mainMenuOutput +
                         loadMenuOutput +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 
@@ -74,9 +76,9 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
                 loadMenuOutput +
                         mainMenuOutput +
-                        mainMenuOutput +
+                        "main:> " +
                         loadMenuOutput +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 
@@ -94,7 +96,7 @@ class ConsoleUserInterfaceTest {
         assertThat(output).isEqualTo(
                 loadMenuOutput +
                         mainMenuOutput +
-                        mainMenuOutput +
+                        "main:> " +
                         "| ID | Name            | Description                    | Tags       | Begin  | End    |" + System.lineSeparator() +
                         "========================================================================================" + System.lineSeparator() +
                         "[1m<==== Project Menu ====>[0m" + System.lineSeparator() +
@@ -132,7 +134,7 @@ class ConsoleUserInterfaceTest {
                         "  back" + System.lineSeparator() +
                         "    Returns to the previous menu." + System.lineSeparator() +
                         "projects:> " +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 
@@ -176,7 +178,7 @@ class ConsoleUserInterfaceTest {
                         "  back" + System.lineSeparator() +
                         "    Return to the previous menu." + System.lineSeparator() +
                         "intray:> " +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 
@@ -244,7 +246,7 @@ class ConsoleUserInterfaceTest {
                         "| ID | Name            | Description                    | Tags       | Deadline | Priority | Status     |" + System.lineSeparator() +
                         "=========================================================================================================" + System.lineSeparator() +
                         "tasks:> " +
-                        mainMenuOutput
+                        "main:> "
                 );
     }
 
@@ -311,7 +313,7 @@ class ConsoleUserInterfaceTest {
                         "| ID | Name            | Description     |" + System.lineSeparator() +
                         "==========================================" + System.lineSeparator() +
                         "someDayMaybe:> " +
-                        mainMenuOutput
+                        "main:> "
         );
     }
 }
