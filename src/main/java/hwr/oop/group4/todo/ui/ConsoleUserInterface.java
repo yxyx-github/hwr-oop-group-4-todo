@@ -105,7 +105,7 @@ public class ConsoleUserInterface {
         final boolean loadFromFile = consoleController.inputBool(List.of("main", "init"), question, false);
 
         if (!loadFromFile) {
-            todoList =  creationAdapter.create();
+            todoList = creationAdapter.create();
             return;
         }
 

@@ -7,7 +7,10 @@ import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -89,10 +92,8 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-
-
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
-                dummyAdapter, null);
+        ConsoleUserInterface ui = new ConsoleUserInterface(
+                new ConsoleController(outputStream, inputStream), dummyAdapter, null);
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
