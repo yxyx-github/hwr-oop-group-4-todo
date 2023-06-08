@@ -14,8 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PersistableTodoListTest {
 
-    @Test
-    void canExportAsString() {
+    TodoList getExampleTodoList() {
         TodoList todoList = new TodoList();
 
         Project projectA = new Project.ProjectBuilder()
@@ -51,6 +50,13 @@ class PersistableTodoListTest {
         todoList.addIdea(ideaA);
         todoList.addIdea(ideaB);
 
+        return todoList;
+    }
+
+    @Test
+    void canExportAsString() {
+        TodoList todoList = getExampleTodoList();
+
         Persistable persistedTodoList = new PersistableTodoList(todoList);
 
         assertThatJson(persistedTodoList.exportAsString())
@@ -66,8 +72,6 @@ class PersistableTodoListTest {
         PersistableTodoList persistableTodoList = new PersistableTodoList(new TodoList());
         persistableTodoList.importFromString(jsonString);
 
-        // System.out.println(persistableTodoList.getTodoList());
-
-        // assertThat(persistableTodoList.getTodoList()).isEqualTo(null);
+        assertThat(persistableTodoList.getTodoList()).isEqualTo(getExampleTodoList());
     }
 }

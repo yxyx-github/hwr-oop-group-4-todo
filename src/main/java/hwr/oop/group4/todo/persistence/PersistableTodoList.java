@@ -2,14 +2,17 @@ package hwr.oop.group4.todo.persistence;
 
 import com.google.gson.*;
 import hwr.oop.group4.todo.core.*;
-import hwr.oop.group4.todo.persistence.json.adapters.deserializers.IdeaDeserializer;
+import hwr.oop.group4.todo.persistence.json.adapters.deserializers.DateTimeDeserializer;
 import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSerializer;
 
 import java.time.LocalDateTime;
 
 public class PersistableTodoList implements Persistable {
-    private final TodoList todoList;
+    private TodoList todoList;
 
+    public PersistableTodoList() {
+
+    }
     public PersistableTodoList(TodoList todoList) {
         this.todoList = todoList;
     }
@@ -28,21 +31,10 @@ public class PersistableTodoList implements Persistable {
 
     @Override
     public void importFromString(String dataString) {
-        dataString = "{\"inTray\": [\n" +
-                "    {\n" +
-                "      \"name\": \"idea a\",\n" +
-                "      \"description\": \"description a\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"name\": \"idea b\",\n" +
-                "      \"description\": \"description b\"\n" +
-                "    }\n" +
-                "  ]}";
-
         Gson gson = new GsonBuilder()
-                // .registerTypeAdapter()
-                .registerTypeAdapter(Idea.class, new IdeaDeserializer())
+                .registerTypeAdapter(LocalDateTime.class, new DateTimeDeserializer())
                 .create();
-        System.out.println(gson.fromJson(dataString, Object.class));
+
+        todoList = gson.fromJson(dataString, TodoList.class);
     }
 }
