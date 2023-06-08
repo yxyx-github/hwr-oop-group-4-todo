@@ -47,7 +47,7 @@ class TodoUiApplicationTest {
                 "  load" + System.lineSeparator() +
                 "  save" + System.lineSeparator() +
                 "  help" + System.lineSeparator() +
-                        "    Print this information." + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "  quit" + System.lineSeparator() +
                 "    Quit the program." + System.lineSeparator() +
                 "main:> "

@@ -37,7 +37,6 @@ public class ProjectUi {
     public void menu(TodoList todoList) {
         this.todoList = todoList;
         listProjects(null);
-
         showHelp(null);
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
@@ -49,7 +48,7 @@ public class ProjectUi {
                     new Command("tasks",  args -> consoleController.callWithValidId(true, size, args, this::tasks)),
                     new Command("edit",   args -> consoleController.callWithValidId(true, size, args, this::editProject)),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeProject)),
-                    new Command("help", this::showHelp),
+                    new Command("help",   this::showHelp),
                     new Command("back",   args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -158,7 +157,7 @@ public class ProjectUi {
 
     private void showHelp(Collection<CommandArgument> args){
         Menu menu = new Menu("Project Menu", "Manage your Projects!", List.of(
-                new Entry("list", "List all projects."),
+                new Entry("list",   "List all projects."),
                 new Entry("new",    "Add a new project."),
                 new Entry("tasks",  "Open the task menu for a project.", List.of(
                         new EntryArgument("id <id>", "ID of the project.")
@@ -175,9 +174,10 @@ public class ProjectUi {
                 new Entry("remove", "Remove a project.", List.of(
                         new EntryArgument("id <id>", "ID of the project to be removed.")
                 )),
-                new Entry("help", "Print this information."),
+                new Entry("help",   "Print this information."),
                 new Entry("back",   "Returns to the previous menu.")
         ));
         consoleController.output(menu.toString());
     }
+
 }
