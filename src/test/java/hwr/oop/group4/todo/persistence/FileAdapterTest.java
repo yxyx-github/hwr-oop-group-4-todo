@@ -1,6 +1,7 @@
 package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
+import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -23,25 +24,38 @@ class FileAdapterTest {
 
         Path path = Path.of(tempDir.toString() + "/FileAdapterTest.save.txt");
         File file = new File(path.toUri());
+        FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
         SavePersistenceAdapter fileAdapter = new FileAdapter();
-        fileAdapter.save(data, file);
+        fileAdapter.save(data, config);
 
         assertThat(Files.exists(path)).isTrue();
         assertThat(file).hasContent("demo file content");
     }
 
     @Test
-    void saveWithException() throws IOException {
+    void saveWithIOException() throws IOException {
         Persistable data = mock();
         when(data.exportAsString()).thenReturn("demo file content");
 
         File file = mock();
         when(file.createNewFile()).thenThrow(IOException.class);
+        FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
         SavePersistenceAdapter fileAdapter = new FileAdapter();
 
-        assertThatThrownBy(() -> fileAdapter.save(data, file)).isInstanceOf(PersistenceRuntimeException.class);
+        assertThatThrownBy(() -> fileAdapter.save(data, config)).isInstanceOf(PersistenceRuntimeException.class);
+    }
+
+    @Test
+    void saveWithEmptyFile() {
+        Persistable data = mock();
+
+        FileAdapterConfiguration config = new FileAdapterConfiguration(null);
+
+        SavePersistenceAdapter fileAdapter = new FileAdapter();
+
+        assertThatThrownBy(() -> fileAdapter.save(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
@@ -56,8 +70,19 @@ class FileAdapterTest {
         writer.close();
 
         LoadPersistenceAdapter fileAdapter = new FileAdapter();
-        fileAdapter.load(data, file);
+        fileAdapter.load(data, new FileAdapterConfiguration(file));
 
         verify(data).importFromString("demo file content");
+    }
+
+    @Test
+    void loadWithEmptyFile() {
+        Persistable data = mock();
+
+        FileAdapterConfiguration config = new FileAdapterConfiguration(null);
+
+        LoadPersistenceAdapter fileAdapter = new FileAdapter();
+
+        assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 }
