@@ -9,8 +9,6 @@ import hwr.oop.group4.todo.persistence.PersistableTodoList;
 import hwr.oop.group4.todo.persistence.SavePersistenceAdapter;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 
-import java.io.File;
-
 public class PersistenceAdapter implements PersistenceFileUseCase {
 
     final LoadPersistenceAdapter loadAdapter;
