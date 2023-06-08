@@ -341,6 +341,8 @@ class ConsoleUserInterfaceTest {
                 "  today" + System.lineSeparator() +
                 "  nextWeek" + System.lineSeparator() +
                 "  lastWeek" + System.lineSeparator() +
+                "  help" + System.lineSeparator() +
+                "    Print this information." + System.lineSeparator() +
                 "  back" + System.lineSeparator() +
                 "    Return to the previous menu" + System.lineSeparator() +
                 System.lineSeparator()
@@ -380,6 +382,8 @@ class ConsoleUserInterfaceTest {
                         "    Move it to projects." + System.lineSeparator() +
                         "    -id <id>" + System.lineSeparator() +
                         "      ID of the list to be used." + System.lineSeparator() +
+                        "  help" + System.lineSeparator() +
+                        "    Print this information." + System.lineSeparator() +
                         "  back" + System.lineSeparator() +
                         "    Returns to the previous menu." + System.lineSeparator() +
                         "| ID | Name            | Description     |" + System.lineSeparator() +
