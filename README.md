@@ -50,5 +50,5 @@ This repository contains a student project created for an ongoing lecture on obj
 | Number | Dependency Name          | Dependency Description                   | Why is it necessary?                  |
 |--------|--------------------------|------------------------------------------|---------------------------------------|
 | 1      | org.mockito              | Mocking-Framework                        | Persistence tests                     |
-| 2      | org.json                 | Library to create and parse JSON strings | JSON is used as format in persistence |
+| 2      | com.google.code.gson     | Library to create and parse JSON strings | JSON is used as format in persistence |
 | 3      | net.javacrumbs.json-unit | Assertion library for JSON               | Simplifies tests handling JSON output |
