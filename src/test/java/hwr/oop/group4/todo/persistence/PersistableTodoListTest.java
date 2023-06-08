@@ -3,15 +3,12 @@ package hwr.oop.group4.todo.persistence;
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.core.*;
 import net.javacrumbs.jsonunit.core.Option;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,9 +69,9 @@ class PersistableTodoListTest {
     void canExportAsString() {
         TodoList todoList = getExampleTodoList();
 
-        Persistable persistedTodoList = new PersistableTodoList(todoList);
+        Persistable persistedTodoList = new PersistableTodoList();
 
-        assertThatJson(persistedTodoList.exportAsString())
+        assertThatJson(persistedTodoList.exportAsString(todoList))
                 .when(Option.IGNORING_ARRAY_ORDER)
                 .isEqualTo(getExampleJSON());
     }
@@ -83,9 +80,9 @@ class PersistableTodoListTest {
     void canImportFromString() {
         String jsonString = getExampleJSON();
 
-        PersistableTodoList persistableTodoList = new PersistableTodoList(new TodoList());
-        persistableTodoList.importFromString(jsonString);
+        PersistableTodoList persistableTodoList = new PersistableTodoList();
+        TodoList todoList = persistableTodoList.importFromString(jsonString);
 
-        assertThat(persistableTodoList.getTodoList()).isEqualTo(getExampleTodoList());
+        assertThat(todoList).isEqualTo(getExampleTodoList());
     }
 }

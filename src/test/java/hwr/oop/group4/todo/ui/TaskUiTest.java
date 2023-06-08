@@ -56,10 +56,10 @@ class TaskUiTest {
             "    Reopens a task." + System.lineSeparator() +
             "    -id <id>" + System.lineSeparator() +
             "      ID of the task which is to be set to open." + System.lineSeparator() +
-            "  back" + System.lineSeparator() +
-            "    Returns to the previous menu." + System.lineSeparator() +
             "  help" + System.lineSeparator() +
-            "    Prints this Menu again.";
+            "    Print this information." + System.lineSeparator() +
+            "  back" + System.lineSeparator() +
+            "    Returns to the previous menu.";
 
     private String retrieveResultFrom(OutputStream outputStream) {
         return outputStream.toString();
