@@ -4,6 +4,7 @@ import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.TodoListCreationUseCase;
+import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import hwr.oop.group4.todo.ui.controller.ConsoleHelper;
 import hwr.oop.group4.todo.ui.controller.command.Command;
@@ -91,7 +92,7 @@ public class ConsoleUserInterface {
             return;
         }
         try {
-            persistenceAdapter.save(todoList, new File(filePath.get()));
+            persistenceAdapter.save(todoList, new FileAdapterConfiguration(new File(filePath.get())));
         } catch (TodoUiRuntimeException e) {
             consoleController.outputLine("There was an error while saving.");
             e.printStackTrace();
@@ -105,7 +106,7 @@ public class ConsoleUserInterface {
             return;
         }
         try {
-            todoList = persistenceAdapter.load(new File(filePath.get()));
+            todoList = persistenceAdapter.load(new FileAdapterConfiguration(new File(filePath.get())));
         } catch (TodoUiRuntimeException e) {
             consoleController.outputLine("There was an error while loading");
             e.printStackTrace();
@@ -128,7 +129,7 @@ public class ConsoleUserInterface {
                 continue;
             }
             try {
-                todoList = persistenceAdapter.load(new File(path.get()));
+                todoList = persistenceAdapter.load(new FileAdapterConfiguration(new File(path.get())));
                 success = true;
             } catch (TodoUiRuntimeException e) {
                 consoleController.outputLine("There was an error while loading");

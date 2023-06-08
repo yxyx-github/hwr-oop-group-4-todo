@@ -3,13 +3,11 @@ package hwr.oop.group4.todo.ui;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
+import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -42,12 +40,13 @@ class ConsoleUserInterfaceTest {
 
     final PersistenceFileUseCase dummyAdapter = new PersistenceFileUseCase() {
         @Override
-        public TodoList load(File file) {
+        public TodoList load(FileAdapterConfiguration config) {
             return new TodoList();
         }
 
         @Override
-        public void save(TodoList todoList, File file) {
+        public void save(TodoList todoList, FileAdapterConfiguration config) {
+            //do nothing
         }
     };
 
@@ -349,7 +348,8 @@ class ConsoleUserInterfaceTest {
         );
         OutputStream outputStream = new ByteArrayOutputStream();
 
-        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream));
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
         ui.mainMenu();
 
         String output = retrieveResultFrom(outputStream);
