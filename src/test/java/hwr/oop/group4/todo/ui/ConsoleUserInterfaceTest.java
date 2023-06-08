@@ -131,6 +131,8 @@ class ConsoleUserInterfaceTest {
                         "    Remove a project." + System.lineSeparator() +
                         "    -id <id>" + System.lineSeparator() +
                         "      ID of the project to be removed." + System.lineSeparator() +
+                        "  help" + System.lineSeparator() +
+                        "    Print this information." + System.lineSeparator() +
                         "  back" + System.lineSeparator() +
                         "    Returns to the previous menu." + System.lineSeparator() +
                         "projects:> " +
