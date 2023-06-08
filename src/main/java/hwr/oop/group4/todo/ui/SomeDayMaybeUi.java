@@ -49,7 +49,7 @@ public class SomeDayMaybeUi {
         while (!shouldReturn.get()) {
             listSomeDayMaybe(null);
             final int size = todoList.getMaybeList().size();
-            consoleController.inputOptions(List.of("someDayMaybe"), List.of(
+            consoleController.inputOptions(List.of("someday"), List.of(
                     new Command("list", this::listSomeDayMaybe),
                     new Command("new", this::newSomeDayMaybe),
                     new Command("remove", args -> consoleController.callWithValidId(true, size, args, this::removeSomeDayMaybe)),
@@ -79,8 +79,8 @@ public class SomeDayMaybeUi {
     }
 
     private void newSomeDayMaybe(Collection<CommandArgument> args) {
-        String name = consoleController.input(List.of("project", "new", "name")).orElseThrow();
-        String desc = consoleController.input(List.of("project", "new", "description")).orElseThrow();
+        String name = consoleController.input(List.of("someday", "new", "name")).orElseThrow();
+        String desc = consoleController.input(List.of("someday", "new", "description")).orElseThrow();
 
         Project someDayMaybe = new Project.ProjectBuilder()
                 .name(name)
@@ -96,15 +96,15 @@ public class SomeDayMaybeUi {
 
         final String someDayMaybeName = todoList.getMaybeList().get(id).getName();
         final String confirmation = "Do you really want to remove " + someDayMaybeName + "?";
-        if (consoleController.inputBool(List.of("projects", "remove"), confirmation, false)) {
+        if (consoleController.inputBool(List.of("someday", "remove"), confirmation, false)) {
             todoList.removeSomedayMaybeProject(todoList.getMaybeList().get(id));
         }
     }
     private void moveToProjects(Collection<CommandArgument> args) {
         final int id = consoleHelper.getId(args, todoList.getMaybeList().stream().toList().size());
         final Project someDayMaybe = todoList.getMaybeList().stream().toList().get(id);
-        LocalDateTime begin = consoleController.inputDate(List.of("projects", "new", "begin"));
-        LocalDateTime end = consoleController.inputDate(List.of("projects", "new", "end"));
+        LocalDateTime begin = consoleController.inputDate(List.of("someday", "move", "begin"));
+        LocalDateTime end = consoleController.inputDate(List.of("someday", "move", "end"));
 
         Project someProject = new Project.ProjectBuilder()
                 .name(todoList.getMaybeList().get(id).getName())

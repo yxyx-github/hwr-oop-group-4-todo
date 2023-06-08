@@ -47,7 +47,7 @@ class SomeDayMaybeUiTest {
         return new ByteArrayInputStream(inputInBytes);
     }
 
-    private TodoList getExampleTodoList(boolean addExampleProjects) {
+    private TodoList getExampleTodoList() {
         TodoList todoList = new TodoList();
 
         todoList.addSomedayMaybeProject(new Project.ProjectBuilder()
@@ -75,7 +75,7 @@ class SomeDayMaybeUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
 
@@ -84,14 +84,14 @@ class SomeDayMaybeUiTest {
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> " +
+                "someday:> " +
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> "
+                "someday:> "
         );
     }
 
@@ -105,7 +105,7 @@ class SomeDayMaybeUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
 
@@ -114,14 +114,14 @@ class SomeDayMaybeUiTest {
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> " +
-                "project/new/name:> " +
-                "project/new/description:> " +
+                "someday:> " +
+                "someday/new/name:> " +
+                "someday/new/description:> " +
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
                 "|  2 |              Ha |              Ho |" + System.lineSeparator() +
-                "someDayMaybe:> ");
+                "someday:> ");
     }
 
     @Test
@@ -133,7 +133,7 @@ class SomeDayMaybeUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
 
@@ -142,13 +142,13 @@ class SomeDayMaybeUiTest {
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> " +
+                "someday:> " +
                 "Do you really want to remove TestProject?" + System.lineSeparator() +
                 "Answer y/Y/yes or n/N/no (leave empty for: no)." + System.lineSeparator() +
-                "projects/remove:> " +
+                "someday/remove:> " +
                 listHeader +
                 "|  0 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> ");
+                "someday:> ");
     }
 
     @Test
@@ -161,7 +161,7 @@ class SomeDayMaybeUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
 
-        final TodoList todoList = getExampleTodoList(true);
+        final TodoList todoList = getExampleTodoList();
         ui.menu(todoList);
 
         String output = retrieveResultFrom(outputStream);
@@ -170,14 +170,14 @@ class SomeDayMaybeUiTest {
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> " +
+                "someday:> " +
                 "Enter a date/time formatted as 'dd.mm.yyyy' or 'dd.mm.yyyy hh:mm': " +
-                "projects/new/begin:> " +
+                "someday/move/begin:> " +
                 "Enter a date/time formatted as 'dd.mm.yyyy' or 'dd.mm.yyyy hh:mm': " +
-                "projects/new/end:> " +
+                "someday/move/end:> " +
                 listHeader +
                 "|  0 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> "
+                "someday:> "
         );
         assertThat(todoList.getMaybeList().size()).isEqualTo(1);
         assertThat(todoList.getProjects().size()).isEqualTo(1);
@@ -190,7 +190,7 @@ class SomeDayMaybeUiTest {
         OutputStream outputStream = new ByteArrayOutputStream();
 
         SomeDayMaybeUi ui = new SomeDayMaybeUi(new ConsoleController(outputStream, inputStream));
-        ui.menu(getExampleTodoList(true));
+        ui.menu(getExampleTodoList());
 
         String output = retrieveResultFrom(outputStream);
         assertThat(output).isEqualTo(
@@ -198,11 +198,11 @@ class SomeDayMaybeUiTest {
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> " +
+                "someday:> " +
                 listHeader +
                 "|  0 |     TestProject |             Bla |" + System.lineSeparator() +
                 "|  1 |             God |             2nd |" + System.lineSeparator() +
-                "someDayMaybe:> "
+                "someday:> "
         );
     }
 }
