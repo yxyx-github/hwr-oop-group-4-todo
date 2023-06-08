@@ -7,7 +7,7 @@ import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSeriali
 
 import java.time.LocalDateTime;
 
-public class PersistableTodoList implements Persistable {
+public class PersistableTodoList implements Persistable<PersistableTodoList> {
     private TodoList todoList;
 
     public PersistableTodoList() {

@@ -19,14 +19,14 @@ class FileAdapterTest {
 
     @Test
     void save(@TempDir Path tempDir) {
-        Persistable data = mock();
+        Persistable<PersistableTodoList> data = mock();
         when(data.exportAsString()).thenReturn("demo file content");
 
         Path path = Path.of(tempDir.toString() + "/FileAdapterTest.save.txt");
         File file = new File(path.toUri());
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter fileAdapter = new FileAdapter();
+        SavePersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
         fileAdapter.save(data, config);
 
         assertThat(Files.exists(path)).isTrue();
@@ -35,32 +35,32 @@ class FileAdapterTest {
 
     @Test
     void saveWithIOException() throws IOException {
-        Persistable data = mock();
+        Persistable<PersistableTodoList> data = mock();
         when(data.exportAsString()).thenReturn("demo file content");
 
         File file = mock();
         when(file.createNewFile()).thenThrow(IOException.class);
         FileAdapterConfiguration config = new FileAdapterConfiguration(file);
 
-        SavePersistenceAdapter fileAdapter = new FileAdapter();
+        SavePersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
     void saveWithEmptyFile() {
-        Persistable data = mock();
+        Persistable<PersistableTodoList> data = mock();
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        SavePersistenceAdapter fileAdapter = new FileAdapter();
+        SavePersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.save(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
 
     @Test
     void load(@TempDir Path tempDir) throws IOException {
-        Persistable data = mock();
+        Persistable<PersistableTodoList> data = mock();
 
         Path path = Path.of(tempDir.toString() + "/FileAdapterTest.load.txt");
         File file = new File(path.toUri());
@@ -69,7 +69,7 @@ class FileAdapterTest {
         writer.write("demo file content");
         writer.close();
 
-        LoadPersistenceAdapter fileAdapter = new FileAdapter();
+        LoadPersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
         fileAdapter.load(data, new FileAdapterConfiguration(file));
 
         verify(data).importFromString("demo file content");
@@ -77,11 +77,11 @@ class FileAdapterTest {
 
     @Test
     void loadWithEmptyFile() {
-        Persistable data = mock();
+        Persistable<PersistableTodoList> data = mock();
 
         FileAdapterConfiguration config = new FileAdapterConfiguration(null);
 
-        LoadPersistenceAdapter fileAdapter = new FileAdapter();
+        LoadPersistenceAdapter<PersistableTodoList> fileAdapter = new FileAdapter<>();
 
         assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
