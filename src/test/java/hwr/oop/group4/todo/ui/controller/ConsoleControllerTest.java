@@ -2,6 +2,7 @@ package hwr.oop.group4.todo.ui.controller;
 
 import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.ui.controller.command.Command;
+import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,8 +191,48 @@ class ConsoleControllerTest {
 
         consoleController.inputBool(List.of(""), "Eingabe.", true);
         assertThat(retrieveResultFrom(outputStream)).isEqualTo("Eingabe."+ System.lineSeparator() +
-                        "Answer y/Y/yes or n/N/no (leave empty for: yes): :> "
+                        "Answer y/Y/yes or n/N/no (leave empty for: yes)." + System.lineSeparator() +
+                        ":> "
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-10, -3, 0, 10})
+    void inputIntDefault(int defaultValue) {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int input = consoleController.inputInt(List.of(""), "", defaultValue);
+        assertThat(input).isEqualTo(defaultValue);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-10", "-3", "0", "10"})
+    void inputInt(String input) {
+        final InputStream inputStream = createInputStreamForInput(input);
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int integer = consoleController.inputInt(List.of(""));
+        assertThat(integer).isEqualTo(Integer.parseInt(input));
+    }
+
+    @Test
+    void inputIntPrompt() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        consoleController.inputInt(List.of(""), "Prompt");
+        assertThat(retrieveResultFrom(outputStream)).isEqualTo("Prompt" + System.lineSeparator() +
+                "Enter a whole number [default: 0]: :> ");
+    }
+
+    @Test
+    void inputUnsupportedValue() {
+        final InputStream inputStream = createInputStreamForInput("4000000000" + System.lineSeparator() + "40");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+        final int input = consoleController.inputInt(List.of(""));
+        assertThat(input).isEqualTo(40);
     }
 
     @Test
@@ -199,7 +241,7 @@ class ConsoleControllerTest {
         final OutputStream outputStream = new ByteArrayOutputStream();
         final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
 
-        final LocalDateTime returnValue = consoleController.inputDate(List.of(""), "Prompt."); // TODO: add defaultDate arg
+        final LocalDateTime returnValue = consoleController.inputDate(List.of(""), "Prompt.");
 
         final LocalDateTime now = LocalDateTime.now();
         assertThat(Duration.between(returnValue, now).toSeconds()).isLessThanOrEqualTo(5);
@@ -238,6 +280,48 @@ class ConsoleControllerTest {
         assertThat(retrieveResultFrom(outputStream)).isEqualTo("Prompt." + System.lineSeparator() +
                 "Enter a date/time formatted as 'dd.mm.yyyy' or 'dd.mm.yyyy hh:mm': :> "
         );
+    }
+
+    @Test
+    void canCallWithValidId() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+
+        class Method {
+            private boolean wasCalled;
+            public Method() { wasCalled = false; }
+            public void call(Collection<CommandArgument> args) { wasCalled = true; }
+            public boolean methodWasCalled() { return wasCalled; }
+        }
+        Method method = new Method();
+
+        final Collection<CommandArgument> args = List.of(new CommandArgument("id", "11"));
+        consoleController.callWithValidId(true, 12, args, method::call);
+
+        assertThat(method.methodWasCalled()).isTrue();
+        assertThat(retrieveResultFrom(outputStream)).isEmpty();
+    }
+
+    @Test
+    void cantCallWithInvalidId() {
+        final InputStream inputStream = createInputStreamForInput("");
+        final OutputStream outputStream = new ByteArrayOutputStream();
+        final ConsoleController consoleController = new ConsoleController(outputStream, inputStream);
+
+        class Method {
+            private boolean wasCalled;
+            public Method() { wasCalled = false; }
+            public void call(Collection<CommandArgument> args) { wasCalled = true; }
+            public boolean methodWasCalled() { return wasCalled; }
+        }
+        Method method = new Method();
+
+        final Collection<CommandArgument> args = List.of(new CommandArgument("id", "11"));
+        consoleController.callWithValidId(true, 1, args, method::call);
+
+        assertThat(method.methodWasCalled()).isFalse();
+        assertThat(retrieveResultFrom(outputStream)).isEqualTo("ID parameter is invalid." + System.lineSeparator());
     }
 
 }
