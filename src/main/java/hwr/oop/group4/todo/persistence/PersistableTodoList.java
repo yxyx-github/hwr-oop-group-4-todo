@@ -1,18 +1,28 @@
 package hwr.oop.group4.todo.persistence;
 
-import hwr.oop.group4.todo.core.TodoList;
-import org.json.JSONObject;
+import com.google.gson.*;
+import hwr.oop.group4.todo.core.*;
+import hwr.oop.group4.todo.persistence.json.adapters.deserializers.DateTimeDeserializer;
+import hwr.oop.group4.todo.persistence.json.adapters.serializers.DateTimeSerializer;
 
-public class PersistableTodoList implements Persistable {
-    private final TodoList todoList;
+import java.time.LocalDateTime;
 
-    public PersistableTodoList(TodoList todoList) {
-        this.todoList = todoList;
+public class PersistableTodoList implements Persistable<TodoList> {
+
+    @Override
+    public String exportAsString(TodoList data) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new DateTimeSerializer())
+                .create();
+        return gson.toJson(data);
     }
 
     @Override
-    public String exportAsString() {
-        JSONObject todoListObject = new JSONObject(todoList);
-        return todoListObject.toString();
+    public TodoList importFromString(String dataString) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new DateTimeDeserializer())
+                .create();
+
+        return gson.fromJson(dataString, TodoList.class);
     }
 }

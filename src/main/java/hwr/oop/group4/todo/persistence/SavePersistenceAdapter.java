@@ -1,8 +1,8 @@
 package hwr.oop.group4.todo.persistence;
 
-import java.io.File;
+import hwr.oop.group4.todo.persistence.configuration.Configuration;
 
-public interface SavePersistenceAdapter {
+public interface SavePersistenceAdapter<T, C extends Configuration> {
 
-    void save(Persistable data, File file);
+    void save(Persistable<T> persistable, T data, C config);
 }

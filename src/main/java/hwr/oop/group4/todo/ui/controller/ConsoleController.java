@@ -1,5 +1,6 @@
 package hwr.oop.group4.todo.ui.controller;
 
+import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.ui.controller.command.Command;
 import hwr.oop.group4.todo.ui.controller.command.CommandArgument;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ConsoleController {
 
@@ -33,7 +35,7 @@ public class ConsoleController {
     public void inputOptions(List<String> prefixes, Collection<Command> options, Command wrongInput) {
         final String[] input = input(prefixes).orElseThrow(() -> new TodoUiRuntimeException("Input is expected"))
                 .split("-");
-        final Collection<CommandArgument<String>> arguments = new ArrayList<>();
+        final Collection<CommandArgument> arguments = new ArrayList<>();
         final String commandName = input[0].trim();
 
         Arrays.stream(input)
@@ -41,9 +43,9 @@ public class ConsoleController {
                 .forEachOrdered(arg -> {
                     final String[] argument = arg.split(" ", 2);
                     if (argument.length == 2) {
-                        arguments.add(new CommandArgument<>(argument[0].trim(), argument[1].trim()));
+                        arguments.add(new CommandArgument(argument[0].trim(), argument[1].trim()));
                     } else {
-                        arguments.add(new CommandArgument<>(argument[0].trim(), ""));
+                        arguments.add(new CommandArgument(argument[0].trim(), ""));
                     }
                 });
 
@@ -72,6 +74,34 @@ public class ConsoleController {
             }
             if (input.equalsIgnoreCase("n") || input.equalsIgnoreCase("no")) {
                 return false;
+            }
+        }
+    }
+
+    public int inputInt(List<String> prefixes) {
+        return inputInt(prefixes, null);
+    }
+
+    public int inputInt(List<String> prefixes, String prompt) {
+        return inputInt(prefixes, prompt, 0);
+    }
+
+    public int inputInt(List<String> prefixes, String prompt, int defaultValue) {
+        while (true) {
+            if (prompt != null && !prompt.isBlank()) {
+                outputLine(prompt);
+            }
+            output("Enter a whole number [default: " + defaultValue + "]: ");
+            final String input = input(prefixes).orElse("");
+
+            if (input.isBlank()) {
+                return defaultValue;
+            }
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                //Retry input
             }
         }
     }
@@ -121,6 +151,19 @@ public class ConsoleController {
         }
         stringBuilder.append(prefixes.get(prefixes.size() - 1)).append(":> ");
         return stringBuilder.toString();
+    }
+
+    public void callWithValidId(boolean printErrMsg, int size, Collection<CommandArgument> args, Consumer<Collection<CommandArgument>> method) {
+        try {
+            consoleHelper.getId(args, size);
+        } catch (TodoRuntimeException e) {
+            if (printErrMsg) {
+                outputLine(e.getMessage());
+            }
+            return;
+        }
+
+        method.accept(args);
     }
 
 }

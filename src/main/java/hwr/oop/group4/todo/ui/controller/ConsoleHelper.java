@@ -9,13 +9,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class ConsoleHelper {
 
-    public Optional<String> getStringParameter(Collection<CommandArgument<String>> args, String name) {
+    public Optional<String> getStringParameter(Collection<CommandArgument> args, String name) {
         return args.stream()
                 .filter(argument -> argument.name().equals(name))
                 .map(CommandArgument::value)
@@ -30,18 +29,20 @@ public class ConsoleHelper {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm");
             return Optional.of(LocalDateTime.parse(input, formatter));
-        } catch (DateTimeParseException ignore) { }
+        } catch (DateTimeParseException ignore) {
+            // fall through, try next parser
+        }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
             LocalDate localDate = LocalDate.parse(input, formatter);
             return Optional.of(LocalDateTime.of(localDate, LocalTime.MIDNIGHT));
-        } catch (DateTimeParseException ignore) { }
-
-        return Optional.empty();
+        } catch (DateTimeParseException ignore) {
+            return Optional.empty();
+        }
     }
 
-    public Integer getId(Collection<CommandArgument<String>> args, int size) {
-        Optional<CommandArgument<String>> idArg = args.stream()
+    public int getId(Collection<CommandArgument> args, int size) {
+        Optional<CommandArgument> idArg = args.stream()
                 .filter(arg -> arg.name().equals("id"))
                 .findFirst();
 
@@ -53,9 +54,13 @@ public class ConsoleHelper {
             throw new TodoRuntimeException("ID Argument has no parameter.");
         }
 
-        int id;
+        return parseAndValidateId(idArg.get().value(), size);
+    }
+
+    private int parseAndValidateId(String input, int size) {
+        final int id;
         try {
-            id = Integer.parseInt(idArg.get().value());
+            id = Integer.parseInt(input);
         } catch (NumberFormatException e) {
             throw new TodoRuntimeException("ID parameter is not a valid number.");
         }
@@ -79,4 +84,11 @@ public class ConsoleHelper {
         return stringBuilder.toString();
     }
 
+    public List<String> addPrefix(List<String> basePrefix, String... prefixes) {
+        if (prefixes == null) {
+            return basePrefix;
+        }
+        return Stream.concat(basePrefix.stream(), Arrays.stream(prefixes))
+                .toList();
+    }
 }
