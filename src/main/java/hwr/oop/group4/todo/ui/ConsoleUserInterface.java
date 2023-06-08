@@ -32,29 +32,19 @@ public class ConsoleUserInterface {
     }
 
     public void mainMenu() {
-        Menu menu = new Menu("Main Menu", "Welcome to ToDo!", List.of(
-                new Entry("intray",   ""),
-                new Entry("tasks",    ""),
-                new Entry("projects", ""),
-                new Entry("calendar", ""),
-                new Entry("someday", ""),
-                new Entry("load",     ""),
-                new Entry("save",     ""),
-                new Entry("quit",     "Quit the program.")
-        ));
+        showHelp(null);
 
         AtomicBoolean shouldReturn = new AtomicBoolean(false);
         while (!shouldReturn.get()) {
-            consoleController.output(menu.toString());
-
             consoleController.inputOptions(List.of("main"), List.of(
                     new Command("intray",   args -> intrayUi.menu(todoList)),
                     new Command("tasks",    args -> taskUi.menu(todoList)),
                     new Command("projects", args -> projectUi.menu(todoList)),
                     new Command("calendar", args -> calendarUi.menu(todoList)),
-                    new Command("someday", args -> someDayMaybeUi.menu(todoList)),
+                    new Command("someday",  args -> someDayMaybeUi.menu(todoList)),
                     new Command("load",     this::load),
                     new Command("save",     this::save),
+                    new Command("help",     this::showHelp),
                     new Command("quit",     args -> shouldReturn.set(true))
             ), new Command("wrongInput", args -> {}));
         }
@@ -72,6 +62,21 @@ public class ConsoleUserInterface {
         } else {
             todoList = new TodoList();
         }
+    }
+
+    private void showHelp(Collection<CommandArgument> args){
+        Menu menu = new Menu("Main Menu", "Welcome to ToDo!", List.of(
+                new Entry("intray",   ""),
+                new Entry("tasks",    ""),
+                new Entry("projects", ""),
+                new Entry("calendar", ""),
+                new Entry("someday",  ""),
+                new Entry("load",     ""),
+                new Entry("save",     ""),
+                new Entry("help",     "Print this information."),
+                new Entry("quit",     "Quit the program.")
+        ));
+        consoleController.output(menu.toString());
     }
 
 }
