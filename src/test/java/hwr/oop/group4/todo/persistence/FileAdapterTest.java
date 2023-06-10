@@ -2,14 +2,11 @@ package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
-import hwr.oop.group4.todo.persistence.configuration.Configuration;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -54,6 +51,24 @@ class FileAdapterTest {
     }
 
     @Test
+    void saveWithCannotWrite(@TempDir Path tempDir) throws IOException {
+        String data = "demo file content";
+
+        Persistable<String> persistable = mock();
+        when(persistable.exportAsString(data)).thenReturn(data);
+
+        File file = new File(tempDir + "/alreadyOpen.json");
+        FileAdapterConfiguration config = new FileAdapterConfiguration(file);
+        file.createNewFile();
+        file.setWritable(false);
+
+        SavePersistenceAdapter<String, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
+        assertThatThrownBy( () -> fileAdapter.save(persistable, data, config))
+                .isInstanceOf(PersistenceRuntimeException.class)
+                .hasMessage("Cannot write file");
+    }
+
+    @Test
     void saveWithEmptyFile() {
         String data = "demo file content";
 
@@ -93,4 +108,19 @@ class FileAdapterTest {
 
         assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
+
+    @Test
+    void loadWithFileNotFound(@TempDir Path tempDir) {
+        Persistable<TodoList> data = mock();
+
+        FileAdapterConfiguration config = new FileAdapterConfiguration(new File(tempDir + "/doesNotExist.txt"));
+
+        LoadPersistenceAdapter<TodoList, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
+
+        assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class)
+                .hasMessage("Cannot read file")
+                .hasCauseInstanceOf(FileNotFoundException.class);
+    }
+
+
 }
