@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TaskTest {
+
     @Test
     void buildDefaultTask() {
         final Task task = new Task.TaskBuilder().build();
