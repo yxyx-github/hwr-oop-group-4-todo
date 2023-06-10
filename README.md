@@ -50,8 +50,8 @@ With that being said, enjoy using our todolist.
 |   17   | :heavy_check_mark: | Calender             | :heavy_check_mark: |
 |   18   | :heavy_check_mark: | Next Task            | :heavy_check_mark: |
 |   19   | :heavy_check_mark: | Complete a Task      | :heavy_check_mark: |
-|   20   |        :x:         | Saving of TodoLists  |        :x:         |
-|   21   |        :x:         | Loading of TodoLists |        :x:         |
+|   20   | :heavy_check_mark: | Saving of TodoLists  | :heavy_check_mark: |
+|   21   | :heavy_check_mark: | Loading of TodoLists | :heavy_check_mark: |
 
 
 ## Additional Dependencies
