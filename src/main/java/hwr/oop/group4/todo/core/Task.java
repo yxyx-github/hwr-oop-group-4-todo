@@ -94,9 +94,6 @@ public class Task {
         private Status status = Status.OPEN;
         private Project project;
 
-        public TaskBuilder() {
-        }
-
         public TaskBuilder name(String name) {
             this.name = name;
             return this;
