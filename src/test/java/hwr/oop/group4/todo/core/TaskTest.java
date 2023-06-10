@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TaskTest {
+
     @Test
     void buildDefaultTask() {
         final Task task = new Task.TaskBuilder().build();
@@ -204,5 +205,28 @@ class TaskTest {
         assertThat(complexTask)
                 .isEqualTo(complexTask2)
                 .isNotEqualTo(task);
+    }
+
+    @Test
+    void notEqualsNull() {
+        final Task task = new Task.TaskBuilder().build();
+
+        assertThat(task).isNotEqualTo(null);
+    }
+
+    @Test
+    void hashCodeEquals() {
+        final Task task = new Task.TaskBuilder().name("name").description("desc").build();
+        final Task taskEqual = new Task.TaskBuilder().name("name").description("desc").build();
+
+        assertThat(task).hasSameHashCodeAs(taskEqual);
+    }
+
+    @Test
+    void hashCodeNotEquals() {
+        final Task task = new Task.TaskBuilder().name("name").description("desc").build();
+        final Task taskNotEqual = new Task.TaskBuilder().name("differentName").description("desc").build();
+
+        assertThat(task).doesNotHaveSameHashCodeAs(taskNotEqual);
     }
 }
