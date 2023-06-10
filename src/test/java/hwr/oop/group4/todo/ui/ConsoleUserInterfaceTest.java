@@ -1,5 +1,6 @@
 package hwr.oop.group4.todo.ui;
 
+import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
@@ -392,4 +393,141 @@ class ConsoleUserInterfaceTest {
                         "main:> "
         );
     }
+
+    @Test
+    void saveFilePathIsEmpty() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "save" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "A filepath is needed inorder to save." + System.lineSeparator() +
+                        "main:> "
+        );
+    }
+
+    @Test
+    void loadFilePathIsEmpty() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "load" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "A filepath is needed inorder to load a file." + System.lineSeparator() +
+                        "main:> "
+        );
+    }
+
+    final PersistenceFileUseCase exceptionAdapter = new PersistenceFileUseCase() {
+        @Override
+        public TodoList load(FileAdapterConfiguration config) {
+            throw new PersistenceRuntimeException();
+        }
+
+        @Override
+        public void save(TodoList todoList, FileAdapterConfiguration config) {
+            throw new PersistenceRuntimeException();
+        }
+    };
+    @Test
+    void saveException() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "save -file //" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                exceptionAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                "There was an error while saving." + System.lineSeparator() +
+                "main:> ");
+    }
+
+    @Test
+    void loadException() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "load -file" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                exceptionAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "There was an error while loading." + System.lineSeparator() +
+                        "main:> ");
+    }
+
+    final PersistenceFileUseCase initAdapter = new PersistenceFileUseCase() {
+        @Override
+        public TodoList load(FileAdapterConfiguration config) {
+            if (config.getFile().get().getPath().equals("shouldFail.txt")) {
+                throw new PersistenceRuntimeException();
+            }
+            return new TodoList();
+        }
+
+        @Override
+        public void save(TodoList todoList, FileAdapterConfiguration config) {
+            //do nothing
+        }
+    };
+
+    @Test
+    void initException() {
+        InputStream inputStream = createInputStreamForInput("yes" + System.lineSeparator() +
+                "shouldFail.txt" + System.lineSeparator() +
+                "shouldFailAs well" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                initAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        "Enter the path to the file which is supposed to be loaded." + System.lineSeparator() +
+                        "main/init/load/path:> " +
+                        "There was an error while loading." + System.lineSeparator() +
+                        "Enter the path to the file which is supposed to be loaded." + System.lineSeparator() +
+                        "main/init/load/path:> " +
+                        mainMenuOutput
+                        );
+    }
+
+
 }
