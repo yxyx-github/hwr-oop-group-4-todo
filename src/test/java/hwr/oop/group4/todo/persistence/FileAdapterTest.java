@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -93,4 +94,19 @@ class FileAdapterTest {
 
         assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class);
     }
+
+    @Test
+    void loadWithFileNotFound(@TempDir Path tempDir) {
+        Persistable<TodoList> data = mock();
+
+        FileAdapterConfiguration config = new FileAdapterConfiguration(new File(tempDir + "/doesNotExist.txt"));
+
+        LoadPersistenceAdapter<TodoList, FileAdapterConfiguration> fileAdapter = new FileAdapter<>();
+
+        assertThatThrownBy(() -> fileAdapter.load(data, config)).isInstanceOf(PersistenceRuntimeException.class)
+                .hasMessage("Cannot read file")
+                .hasCauseInstanceOf(FileNotFoundException.class);
+    }
+
+
 }
