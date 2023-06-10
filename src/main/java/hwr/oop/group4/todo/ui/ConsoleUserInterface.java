@@ -1,5 +1,6 @@
 package hwr.oop.group4.todo.ui;
 
+import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
 import hwr.oop.group4.todo.commons.exceptions.TodoUiRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
@@ -80,7 +81,7 @@ public class ConsoleUserInterface {
         }
         try {
             persistenceAdapter.save(todoList, new FileAdapterConfiguration(new File(filePath.get())));
-        } catch (TodoUiRuntimeException e) {
+        } catch (PersistenceRuntimeException e) {
             consoleController.outputLine("There was an error while saving.");
             e.printStackTrace();
         }

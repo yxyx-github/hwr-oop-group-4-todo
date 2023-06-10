@@ -1,18 +1,24 @@
 package hwr.oop.group4.todo.ui;
 
+import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
+import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
+import hwr.oop.group4.todo.persistence.FileAdapter;
+import hwr.oop.group4.todo.persistence.Persistable;
+import hwr.oop.group4.todo.persistence.SavePersistenceAdapter;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ConsoleUserInterfaceTest {
 
@@ -389,6 +395,50 @@ class ConsoleUserInterfaceTest {
                         "| ID | Name            | Description     |" + System.lineSeparator() +
                         "==========================================" + System.lineSeparator() +
                         "someday:> " +
+                        "main:> "
+        );
+    }
+
+    @Test
+    void saveFilePathIsEmpty() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "save" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "A filepath is needed inorder to save." + System.lineSeparator() +
+                        "main:> "
+        );
+    }
+
+    @Test
+    void loadFilePathIsEmpty() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "load" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                dummyAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "A filepath is needed inorder to load a file." + System.lineSeparator() +
                         "main:> "
         );
     }
