@@ -1,7 +1,6 @@
 package hwr.oop.group4.todo.persistence;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
-import hwr.oop.group4.todo.persistence.configuration.Configuration;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 
 import java.io.File;
