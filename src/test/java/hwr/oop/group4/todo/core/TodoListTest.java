@@ -126,4 +126,61 @@ class TodoListTest {
 
         assertThat(todo.getInTray()).isEmpty();
     }
+
+    @Test
+    void equalsSameObject() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+        todoList.addLoseTask(new Task.TaskBuilder().name("task").build());
+
+        assertThat(todoList).isEqualTo(todoList);
+    }
+
+    @Test
+    void equals() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+        final TodoList todoListEqual = new TodoList();
+        todoListEqual.addIdea(new Idea("1234", "desc"));
+
+        assertThat(todoList).isEqualTo(todoListEqual);
+    }
+
+    @Test
+    void notEquals() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+        final TodoList todoListNotEqual = new TodoList();
+        todoListNotEqual.addIdea(new Idea("differentName", "desc"));
+
+        assertThat(todoList).isNotEqualTo(todoListNotEqual);
+    }
+
+    @Test
+    void notEqualsNull() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+
+        assertThat(todoList).isNotEqualTo(null);
+    }
+
+    @Test
+    void hashEquals() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+        final TodoList todoListEqual = new TodoList();
+        todoListEqual.addIdea(new Idea("1234", "desc"));
+
+        assertThat(todoList).hasSameHashCodeAs(todoListEqual);
+    }
+
+    @Test
+    void hashNotEquals() {
+        final TodoList todoList = new TodoList();
+        todoList.addIdea(new Idea("1234", "desc"));
+        final TodoList todoListEqual = new TodoList();
+        todoListEqual.addIdea(new Idea("differentName", "desc"));
+
+        assertThat(todoList).doesNotHaveSameHashCodeAs(todoListEqual);
+    }
 }
