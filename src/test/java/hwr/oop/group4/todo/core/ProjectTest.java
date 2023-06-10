@@ -102,4 +102,27 @@ class ProjectTest {
         assertThat(project.getTasks()).contains(task, task2);
         assertThat(project.getTasks()).hasSize(2);
     }
+
+    @Test
+    void notEqualsNull() {
+        final Project project = new Project.ProjectBuilder().build();
+
+        assertThat(project).isNotEqualTo(null);
+    }
+
+    @Test
+    void equalsHashCode() {
+        final Project project = new Project.ProjectBuilder().name("name").description("desc").build();
+        final Project projectEquals = new Project.ProjectBuilder().name("name").description("desc").build();
+
+        assertThat(project).hasSameHashCodeAs(projectEquals);
+    }
+
+    @Test
+    void equalsNotHashCode() {
+        final Project project = new Project.ProjectBuilder().name("name").description("desc").build();
+        final Project projectNotEquals = new Project.ProjectBuilder().name("differentName").description("desc").build();
+
+        assertThat(project).doesNotHaveSameHashCodeAs(projectNotEquals);
+    }
 }
