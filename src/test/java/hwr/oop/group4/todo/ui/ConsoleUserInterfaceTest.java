@@ -1,24 +1,19 @@
 package hwr.oop.group4.todo.ui;
 
 import hwr.oop.group4.todo.commons.exceptions.PersistenceRuntimeException;
-import hwr.oop.group4.todo.commons.exceptions.TodoRuntimeException;
 import hwr.oop.group4.todo.core.TodoList;
 import hwr.oop.group4.todo.core.api.PersistenceFileUseCase;
 import hwr.oop.group4.todo.core.api.adapter.TodoListCreationAdapter;
-import hwr.oop.group4.todo.persistence.FileAdapter;
-import hwr.oop.group4.todo.persistence.Persistable;
-import hwr.oop.group4.todo.persistence.SavePersistenceAdapter;
 import hwr.oop.group4.todo.persistence.configuration.FileAdapterConfiguration;
 import hwr.oop.group4.todo.ui.controller.ConsoleController;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class ConsoleUserInterfaceTest {
 
@@ -442,4 +437,97 @@ class ConsoleUserInterfaceTest {
                         "main:> "
         );
     }
+
+    final PersistenceFileUseCase exceptionAdapter = new PersistenceFileUseCase() {
+        @Override
+        public TodoList load(FileAdapterConfiguration config) {
+            throw new PersistenceRuntimeException();
+        }
+
+        @Override
+        public void save(TodoList todoList, FileAdapterConfiguration config) {
+            throw new PersistenceRuntimeException();
+        }
+    };
+    @Test
+    void saveException() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "save -file //" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                exceptionAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                "There was an error while saving." + System.lineSeparator() +
+                "main:> ");
+    }
+
+    @Test
+    void loadException() {
+        InputStream inputStream = createInputStreamForInput("no" + System.lineSeparator() +
+                "load -file" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                exceptionAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        mainMenuOutput +
+                        "There was an error while loading." + System.lineSeparator() +
+                        "main:> ");
+    }
+
+    final PersistenceFileUseCase initAdapter = new PersistenceFileUseCase() {
+        @Override
+        public TodoList load(FileAdapterConfiguration config) {
+            if (config.getFile().get().getPath().equals("shouldFail.txt")) {
+                throw new PersistenceRuntimeException();
+            }
+            return new TodoList();
+        }
+
+        @Override
+        public void save(TodoList todoList, FileAdapterConfiguration config) {
+            //do nothing
+        }
+    };
+
+    @Test
+    void initException() {
+        InputStream inputStream = createInputStreamForInput("yes" + System.lineSeparator() +
+                "shouldFail.txt" + System.lineSeparator() +
+                "shouldFailAs well" + System.lineSeparator() +
+                "quit" + System.lineSeparator()
+        );
+        OutputStream outputStream = new ByteArrayOutputStream();
+
+        ConsoleUserInterface ui = new ConsoleUserInterface(new ConsoleController(outputStream, inputStream),
+                initAdapter, new TodoListCreationAdapter());
+        ui.mainMenu();
+
+        String output = retrieveResultFrom(outputStream);
+        assertThat(output).isEqualTo(
+                initMenuOutput +
+                        "Enter the path to the file which is supposed to be loaded." + System.lineSeparator() +
+                        "main/init/load/path:> " +
+                        "There was an error while loading." + System.lineSeparator() +
+                        "Enter the path to the file which is supposed to be loaded." + System.lineSeparator() +
+                        "main/init/load/path:> " +
+                        mainMenuOutput
+                        );
+    }
+
+
 }
